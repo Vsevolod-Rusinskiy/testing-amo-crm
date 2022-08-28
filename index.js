@@ -54,8 +54,8 @@ let events = [{
 // app.use(express.static(path.join(path.__dirname, 'public')));
 
 app.get('/', (req, res) => {
-    res.send('ok')
-    // res.render('index.html')
+    // res.send('ok')
+    res.render('index.html')
 });
 
 app.get('/events/all', (req, res) => {
