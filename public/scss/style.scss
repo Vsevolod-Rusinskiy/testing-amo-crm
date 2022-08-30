@@ -1,3 +1,14 @@
+@import './variables.scss';
+
+* {
+    // TODO fix
+    font-family: "Inter", sans-serif;
+    background-color: rgb(240, 242, 245);
+    // background-color: red;
+  }
+
+
 button {
-    background-color: aqua;
+
+    background-color: green;
 }
