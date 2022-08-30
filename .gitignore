@@ -4,3 +4,4 @@ node_modules
 z_imnap.js
 
 *.zip
+.env
