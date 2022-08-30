@@ -12,12 +12,10 @@ const path = require("path");
 const axios = require('axios');
 require('dotenv').config()
 
-console.log(process.env.TOKEN);
-// const leads = require('./answer');
-
 const app = express();
 
 const PORT = process.env.SERVER_PORT || 3000;
+const token = process.env.TOKEN
 
 app.use(cors({
     origin: '*'
@@ -32,7 +30,6 @@ app.get('/', (req, res) => {
     res.render('index.html')
 });
 
-const token = 
 
 
 
