@@ -1,4 +1,4 @@
-  const leads = {
+  const leadsMy = {
     "_page": 1,
     "_links": {
         "self": {
@@ -71,4 +71,7 @@
     }
 }
 
-module.exports = leads;
+
+// console.log(leads._embedded.leads[0])
+
+// module.exports = leads;

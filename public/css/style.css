@@ -1,8 +1,33 @@
 * {
   font-family: "Inter", sans-serif;
+}
+
+body {
   background-color: rgb(240, 242, 245);
 }
 
-button {
-  background-color: green;
+main {
+  padding: 50px;
+}
+main .wrapper {
+  border: 1px solid silver;
+  background: white;
+}
+main .wrapper .search-pannel {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: rgba(0, 0, 0, 0.8);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 16px 24px;
+}
+main .wrapper .search-pannel input {
+  padding: 4px 30px 4px 11px;
 }

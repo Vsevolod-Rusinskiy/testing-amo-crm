@@ -1,14 +1,29 @@
-@import './variables.scss';
+@import "./variables.scss";
 
 * {
-    // TODO fix
-    font-family: "Inter", sans-serif;
-    background-color: rgb(240, 242, 245);
-    // background-color: red;
+  font-family: "Inter", sans-serif;
+}
+
+body {
+  background-color: rgb(240, 242, 245);
+
+}
+main {
+  padding: 50px;
+  .wrapper {
+    border: 1px solid silver;
+    background: white;
+    .search-pannel {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;  
+      color: rgba(0, 0, 0, 0.8);
+      font-weight: 500;
+      font-size: 16px;
+      padding: 16px 24px;
+      input {
+          padding: 4px 30px 4px 11px ;
+      }
+    }
   }
-
-
-button {
-
-    background-color: green;
 }

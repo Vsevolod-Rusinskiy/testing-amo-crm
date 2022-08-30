@@ -1,0 +1,44 @@
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Тестовое задание</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/style-dist.css" />
+  </head>
+
+  <body>
+    <section>
+      <main>
+        <div class="wrapper">
+          <div class="search-pannel">
+            <div class="title">Пример тестового задания</div>
+            <div class="search">
+              <input type="text" placeholder="Поиск сделок" />
+            </div>
+          </div>
+          <div class="table">
+            <div class="head">
+              {{#each data}}
+                {{id}}
+              {{/each}}
+            </div>
+            <div class="content">
+              <div class="row">
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </main>
+    </section>
+    <script src="script.js"></script>
+  </body>
+</html>
