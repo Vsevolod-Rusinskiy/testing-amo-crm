@@ -14,13 +14,12 @@ const {
     engine
 } = require('express-handlebars')
 const axios = require('axios');
-const { _embedded } = require("./answer");
-// const leads = require("./answer");
+
 require('dotenv').config()
 
 const app = express();
 
-const PORT = process.env.SERVER_PORT || 3002;
+const PORT = process.env.SERVER_PORT || 8080;
 const token = process.env.TOKEN
 
 app.use(cors({
@@ -42,6 +41,8 @@ app.use(express.static(path.resolve() + "/public"));
 app.get('/', (req, res) => {
     // res.render('home');
 
+    getAmoLeads()
+
     async function getAmoLeads() {
         let answer = await axios({
             method: 'get',
@@ -53,15 +54,14 @@ app.get('/', (req, res) => {
         })
 
         const response = await answer.data
-        console.log(response._embedded.leads)
         const leads = response._embedded.leads
+        console.log(response._embedded.leads[0]._embedded)
         res.render('home', {
-            title: 'Тестовое задание111',
+            title: 'Тестовое задание',
             data: leads
         })
     }
 
-    getAmoLeads()
 
 });
 
