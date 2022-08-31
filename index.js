@@ -38,10 +38,13 @@ app.engine("hbs", engine({
 app.use(express.static(path.resolve() + "/public"));
 
 
-app.get('/', (req, res) => {
-    // res.render('home');
+app.get('/', async (req, res) => {
 
-    getAmoLeads()
+    await getAmoLeads()
+
+
+
+
 
     async function getAmoLeads() {
         let answer = await axios({
@@ -55,12 +58,20 @@ app.get('/', (req, res) => {
 
         const response = await answer.data
         const leads = response._embedded.leads
-        console.log(response._embedded.leads[0]._embedded)
+        console.log(response._embedded.leads)
+
+
+
+
+
+        
         res.render('home', {
             title: 'Тестовое задание',
             data: leads
         })
     }
+
+
 
 
 });
