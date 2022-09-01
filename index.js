@@ -40,13 +40,18 @@ app.use(express.static(path.resolve() + "/public"));
 
 app.get('/', async (req, res) => {
 
-    await getAmoLeads()
+    // let leads = {}
+    // let users = {}
 
+    // await getLeads();
+    // await getUsers();
 
+    res.render('home', {
+        title: 'Тестовое задание',
+        data: await getLeads()
+    })
 
-
-
-    async function getAmoLeads() {
+    async function getLeads() {
         let answer = await axios({
             method: 'get',
             url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads',
@@ -56,23 +61,37 @@ app.get('/', async (req, res) => {
             },
         })
 
-        const response = await answer.data
-        const leads = response._embedded.leads
-        console.log(response._embedded.leads)
+        leads = answer.data._embedded.leads;
+        return leads
+    }
 
-
-
-
-
-        
-        res.render('home', {
-            title: 'Тестовое задание',
-            data: leads
-        })
+    async function getUsers() {
+        let answer = await axios({
+            method: 'get',
+            url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
+        users = answer.data._embedded.users;
+        return users;
     }
 
 
+    function putUsersNamesAndIdInObj(users) {
+        let usersNamesAndIdInObj = {};
 
+        for (let elem of users) {
+            let key = elem.id;
+            let value = elem.name;
+            usersNamesAndIdInObj[key] = value
+        }
+        return usersNamesAndIdInObj;
+    }
+
+ 
+    console.log('putUsersNamesAndIdInObj', putUsersNamesAndIdInObj(await getUsers()))
 
 });
 
