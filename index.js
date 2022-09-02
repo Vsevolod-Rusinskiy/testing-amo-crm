@@ -43,12 +43,17 @@ app.get('/', async (req, res) => {
     // let leads = {}
     // let users = {}
 
-    // await getLeads();
-    // await getUsers();
+    // TODO Promise.all ???
+
+    await getLeads();
+    await getUsers();
+
+    const response = changeIdForName(leads, putUsersNamesAndIdInObj(users))
+
 
     res.render('home', {
         title: 'Тестовое задание',
-        data: await getLeads()
+        data: response
     })
 
     async function getLeads() {
@@ -66,7 +71,7 @@ app.get('/', async (req, res) => {
     }
 
     async function getUsers() {
-        let answer = await axios({
+        const answer = await axios({
             method: 'get',
             url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
             headers: {
@@ -80,18 +85,32 @@ app.get('/', async (req, res) => {
 
 
     function putUsersNamesAndIdInObj(users) {
-        let usersNamesAndIdInObj = {};
+        const usersNamesAndIdInObj = {};
 
-        for (let elem of users) {
-            let key = elem.id;
-            let value = elem.name;
+        for (const elem of users) {
+            const key = elem.id;
+            const value = elem.name;
             usersNamesAndIdInObj[key] = value
         }
         return usersNamesAndIdInObj;
     }
 
- 
-    console.log('putUsersNamesAndIdInObj', putUsersNamesAndIdInObj(await getUsers()))
+   
+    // console.log('++++', await getLeads())
+    // console.log('>>>', putUsersNamesAndIdInObj(await getUsers()))
+
+    function changeIdForName(leads, names) {
+        for (const elem of leads) {
+            for (const item in names) {
+                if (elem.responsible_user_id === +item) {
+                  elem.responsible_user_id = names[item]
+                }
+            }
+        }
+        return leads
+    }
+  
+    // console.log(changeIdForName(leads, putUsersNamesAndIdInObj(users)))
 
 });
 
