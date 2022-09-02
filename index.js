@@ -1,11 +1,3 @@
-// import express from "express";
-// import cors from 'cors';
-// import path  from "path";
-// import fs from 'fs';
-// import axios from 'axios'
-// import  leads from './answer'
-// console.log(Client);
-
 const express = require("express");
 const cors = require('cors');
 const path = require("path");
@@ -28,7 +20,6 @@ app.use(cors({
 
 app.use(express.json());
 
-
 app.set('view engine', 'hbs');
 app.engine("hbs", engine({
     layoutsDir: "views/",
@@ -40,8 +31,6 @@ app.use(express.static(path.resolve() + "/public"));
 
 app.get('/', async (req, res) => {
 
-    // let leads = {}
-    // let users = {}
 
     // TODO Promise.all ???
 
@@ -67,6 +56,7 @@ app.get('/', async (req, res) => {
         })
 
         leads = answer.data._embedded.leads;
+        console.log(leads)
         return leads
     }
 
@@ -80,6 +70,7 @@ app.get('/', async (req, res) => {
             },
         });
         users = answer.data._embedded.users;
+        // console.log('>>>',users)
         return users;
     }
 

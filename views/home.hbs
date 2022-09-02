@@ -1,6 +1,7 @@
 <html lang="en">
 
   <head>
+      <script src="https://use.fontawesome.com/0fe1a5afde.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
@@ -11,6 +12,7 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style-dist.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
   </head>
 
   <body>
@@ -18,7 +20,7 @@
       <main>
         <div class="wrapper">
           <div class="search-pannel">
-            <div class="title">Пример тестового задания</div>
+            <div class="title">Пример тестового задания<span><i class="fa-thin fa-circle-user"></i></span></div>
             <div class="search">
               <input type="text" placeholder="Поиск сделок" />
             </div>
@@ -38,7 +40,7 @@
                 <div class="first-cell"><span>+</span></div>
                 <div class="second-cell">{{name}}</div>
                 <div class="child">Статус</div>
-                <div class="child">{{responsible_user_id}}</div>
+                <div class="child"><i class="fa-regular fa-user"></i>{{responsible_user_id}}</div>
                 <div class="child">Дата создания</div>
                 <div class="child">{{price}} ₽</div>
               </div>
@@ -50,6 +52,7 @@
       </main>
     </section>
     {{! <script src="script.js"></script> }}
+    
   </body>
 </html>
 
