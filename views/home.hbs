@@ -11,7 +11,13 @@
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/css/style-dist.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+      integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
   </head>
 
   <body>
@@ -28,29 +34,58 @@
             <div class="content">
               <div class="head item">
                 <div class="hidden">+</div>
-                <div class="status-cell" >Название</div>
+                <div class="name-cell">Название</div>
                 <div class="child">Статус</div>
                 <div class="child">Ответственный</div>
                 <div class="child">Дата создания</div>
                 <div class="child">Бюджет</div>
               </div>
-            {{#each data}}
-              <div class="row item">
-                <div class=""><span>+</span></div>
-                <div class="status-cell">{{name}}</div>
-                <div class="child">Статус</div>
-                <div class="child"><i class="fa-regular fa-user"></i>{{responsible_user_id}}</div>
-                <div class="child">Дата создания</div>
-                <div class="child">{{price}} ₽</div>
-              </div>
-            {{/each}} 
+              {{!-- {{#if statusColor}}
+                <p>hello</p>
+                {{!-- {{ELSE}} --}}
+              {{!-- {{/if}} --}}
+              {{!-- {{data.status_id}} --}}
+              {{#each data}}
+                <div class="row item">
+                  <div class=""><span>+</span></div>
+
+                  <div class="name-cell">{{name}}</div>
+                  {{#if firstContact}}
+                    <div class="child"><span
+                        class="responsible first-contact"
+                      >{{status_id}}</span></div>
+                  {{/if}}
+                  {{#if negotiation}}
+                    <div class="child"><span
+                        class="responsible negotiation"
+                      >{{status_id}}</span></div>
+                  {{/if}}
+                  {{#if decisions}}
+                    <div class="child"><span
+                        class="responsible decisions"
+                      >{{status_id}}</span></div>
+                  {{/if}}
+                  {{#if agreement}}
+                    <div class="child"><span
+                        class="responsible agreement"
+                      >{{status_id}}</span></div>
+                  {{/if}}
+
+                  <div class="child">
+                    <i
+                      class="fa-regular fa-user"
+                    ></i>{{responsible_user_id}}</div>
+                  <div class="child">{{created_at}}</div>
+                  <div class="child">{{price}} ₽</div>
+                </div>
+              {{/each}}
             </div>
           </div>
         </div>
       </main>
     </section>
     {{! <script src="script.js"></script> }}
-    
+
   </body>
 </html>
 

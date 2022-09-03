@@ -37,12 +37,16 @@ app.get('/', async (req, res) => {
     await getLeads();
     await getUsers();
 
-    const response = changeIdForName(leads, putUsersNamesAndIdInObj(users))
+    // change id for names;
+    const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
+    const leadsWithStatuses = changeDate(leadsWithUsersNames);
+    const answer = changeStatusIdForStatusText(leadsWithStatuses, statuses)
 
-
+    console.log(answer);
     res.render('home', {
         title: 'Тестовое задание',
-        data: response
+        data: answer,
+        // statusColor: true
     })
 
     async function getLeads() {
@@ -56,7 +60,7 @@ app.get('/', async (req, res) => {
         })
 
         leads = answer.data._embedded.leads;
-        console.log(leads)
+        // console.log(leads)
         return leads
     }
 
@@ -73,72 +77,104 @@ app.get('/', async (req, res) => {
         // console.log('>>>',users)
         return users;
     }
-
-
-    function putUsersNamesAndIdInObj(users) {
-        const usersNamesAndIdInObj = {};
-
-        for (const elem of users) {
-            const key = elem.id;
-            const value = elem.name;
-            usersNamesAndIdInObj[key] = value
-        }
-        return usersNamesAndIdInObj;
-    }
-
-   
-    // console.log('++++', await getLeads())
-    // console.log('>>>', putUsersNamesAndIdInObj(await getUsers()))
-
-    function changeIdForName(leads, names) {
-        for (const elem of leads) {
-            for (const item in names) {
-                if (elem.responsible_user_id === +item) {
-                  elem.responsible_user_id = names[item]
-                }
-            }
-        }
-        return leads
-    }
-  
-    // console.log(changeIdForName(leads, putUsersNamesAndIdInObj(users)))
-
 });
 
 
+function putUsersNamesAndIdInObj(users) {
+    const usersNamesAndIdInObj = {};
 
-// app.get('/', (req, res) => {
-//     res.render('layout.hbs', {
-//         title: 'Test'
-//     })
-// });
+    for (const elem of users) {
+        const key = elem.id;
+        const value = elem.name;
+        usersNamesAndIdInObj[key] = value
+    }
+    return usersNamesAndIdInObj;
+}
+
+function changeNameIdForNameText(leads, names) {
+    for (const elem of leads) {
+        for (const item in names) {
+            if (elem.responsible_user_id === +item) {
+                elem.responsible_user_id = names[item];
+            }
+        }
+    }
+    return leads
+}
+
+const statuses = {
+    50272636: 'Первичный контакт',
+    50272639: 'Переговоры',
+    50272642: 'Принимают решения',
+    50272645: 'Согласование договора'
+}
+
+// const statusColor = {
+//     firstContact: 'color: red',
+//     negotiation: 'color: green'
+// }
+
+function convertDate(unix_timestamp) {
+    const date = new Date(unix_timestamp * 1000);
+    return date.toLocaleString("ru-RU", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    }).slice(0, -3)
+}
+
+function changeDate(leads) {
+    for (const elem of leads) {
+        if (elem.created_at) {
+            elem.created_at = convertDate(elem.created_at)
+        }
+    }
+    return leads;
+}
 
 
-// app.get('/api/leads', (req, res) => {
+function changeStatusIdForStatusText(leads, statuses) {
+    for (const elem of leads) {
+        for (const item in statuses) {
 
-//     async function getAmoLeads() {
-//         let answer = await axios({
-//             method: 'get',
-//             url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads',
-//             headers: {
-//                 'Authorization': `Bearer ${token}`,
-//                 'Content-Type': "application/json"
-//             },
-//         })
+            if (elem.status_id === +item) {
+                elem.status_id = statuses[item];
 
-//         const responseBody = answer.data
-//         // console.log(responseBody)
-//         // res.send(responseBody);
-//         res.render('home', {
-//             title: 'Тестовое задание',
-//             data: responseBody
-//         })
-//     }
+                if (elem.status_id === "Первичный контакт") {
+                    elem.firstContact = true;
+                }
+                if (elem.status_id === "Переговоры") {
+                    elem.negotiation = true;
+                }
+                if (elem.status_id === "Принимают решения") {
+                    elem.decisions = true;
+                }
+                if (elem.status_id === "Согласование договора") {
+                    elem.agreement = true;
+                }
 
-//     getAmoLeads()
 
-// });
+                // switch (elem.status_id) {
+                //     case '"Первичный контакт"':
+                //         elem.firstContact = true;
+                //         break;
+                //     case 'Переговоры':
+                //         elem.negotiation = true;
+                //         break;
+                //     case 'Принимают решения':
+                //         elem.decisions = true;
+                //         break;
+                //     case 'Согласование договора':
+                //         elem.agreement = true;
+                //         break;
+                // }
 
+            }
+        }
+
+    }
+    return leads
+}
 
 
 

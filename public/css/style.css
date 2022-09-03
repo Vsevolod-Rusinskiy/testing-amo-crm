@@ -74,8 +74,18 @@ main .wrapper .table .content .head .child .hidden,
 main .wrapper .table .content .item .child .hidden {
   visibility: hidden;
 }
-main .wrapper .table .content .head .status-cell,
-main .wrapper .table .content .item .status-cell {
+main .wrapper .table .content .head .child span.responsible,
+main .wrapper .table .content .item .child span.responsible {
+  display: inline-block;
+  font-size: 12px;
+  color: rgb(46, 46, 46);
+  font-weight: 300;
+  border-radius: 3px;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+main .wrapper .table .content .head .name-cell,
+main .wrapper .table .content .item .name-cell {
   width: 400px;
 }
 main .wrapper .table .content .row {
@@ -83,7 +93,24 @@ main .wrapper .table .content .row {
   font-weight: 300;
   background-color: white;
 }
+main .wrapper .table .content .row .first-contact {
+  background-color: #9bcdfd;
+}
+main .wrapper .table .content .row .negotiation {
+  background-color: #fbfdad;
+}
+main .wrapper .table .content .row .decisions {
+  background-color: #fdcb6e;
+}
+main .wrapper .table .content .row .agreement {
+  background-color: green;
+}
 main .wrapper .table .content .row i {
-  font-size: 20px;
-  padding-right: 10px;
+  color: white;
+  background-color: silver;
+  text-align: center;
+  font-size: 13px;
+  padding: 8px;
+  margin-right: 10px;
+  border-radius: 20px;
 }

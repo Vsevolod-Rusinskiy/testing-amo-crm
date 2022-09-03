@@ -55,18 +55,53 @@ main {
             .hidden {
               visibility: hidden;
             }
+
+            span.responsible {
+                display: inline-block;
+                // margin: 10px;
+                font-size: 12px;
+                color: rgb(46, 46, 46);
+                font-weight: 300;
+                border-radius: 3px;
+                padding: 4px 7px;
+                white-space: nowrap;
+            }
           }
-          .status-cell {
-              width: 400px;
+          .name-cell {
+            width: 400px;
           }
         }
         .row {
           color: rgb(132, 132, 132);
+        //   span {
+            // .responsible {
+            //   padding: 5px;
+            //   // }
+            // }
+            
+            .first-contact {
+              background-color: #9bcdfd;
+          }
+          .negotiation {
+            background-color: #fbfdad;
+          }
+          .decisions {
+            background-color: #fdcb6e;
+          }
+          .agreement {
+            background-color: green;
+          }
           font-weight: 300;
           background-color: white;
           i {
-              font-size: 20px;
-              padding-right: 10px;
+              color: white;
+              background-color: silver;
+              text-align: center;
+
+            font-size: 13px;
+            padding: 8px;
+            margin-right: 10px;
+            border-radius: 20px;
             //   color: silver;
           }
         }
