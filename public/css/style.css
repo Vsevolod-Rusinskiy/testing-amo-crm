@@ -74,12 +74,16 @@ main .wrapper .table .content .head .child .hidden,
 main .wrapper .table .content .item .child .hidden {
   visibility: hidden;
 }
-main .wrapper .table .content .head .second-cell,
-main .wrapper .table .content .item .second-cell {
+main .wrapper .table .content .head .status-cell,
+main .wrapper .table .content .item .status-cell {
   width: 400px;
 }
 main .wrapper .table .content .row {
   color: rgb(132, 132, 132);
   font-weight: 300;
   background-color: white;
+}
+main .wrapper .table .content .row i {
+  font-size: 20px;
+  padding-right: 10px;
 }

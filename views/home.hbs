@@ -1,7 +1,6 @@
 <html lang="en">
 
   <head>
-      <script src="https://use.fontawesome.com/0fe1a5afde.js"></script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{title}}</title>
@@ -20,7 +19,7 @@
       <main>
         <div class="wrapper">
           <div class="search-pannel">
-            <div class="title">Пример тестового задания<span><i class="fa-thin fa-circle-user"></i></span></div>
+            <div class="title">Пример тестового задания</div>
             <div class="search">
               <input type="text" placeholder="Поиск сделок" />
             </div>
@@ -28,8 +27,8 @@
           <div class="table">
             <div class="content">
               <div class="head item">
-                <div class="first-cell hidden">+</div>
-                <div class="second-cell" >Название</div>
+                <div class="hidden">+</div>
+                <div class="status-cell" >Название</div>
                 <div class="child">Статус</div>
                 <div class="child">Ответственный</div>
                 <div class="child">Дата создания</div>
@@ -37,8 +36,8 @@
               </div>
             {{#each data}}
               <div class="row item">
-                <div class="first-cell"><span>+</span></div>
-                <div class="second-cell">{{name}}</div>
+                <div class=""><span>+</span></div>
+                <div class="status-cell">{{name}}</div>
                 <div class="child">Статус</div>
                 <div class="child"><i class="fa-regular fa-user"></i>{{responsible_user_id}}</div>
                 <div class="child">Дата создания</div>
@@ -47,7 +46,6 @@
             {{/each}} 
             </div>
           </div>
-
         </div>
       </main>
     </section>

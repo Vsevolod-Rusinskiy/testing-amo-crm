@@ -56,7 +56,7 @@ main {
               visibility: hidden;
             }
           }
-          .second-cell {
+          .status-cell {
               width: 400px;
           }
         }
@@ -64,15 +64,12 @@ main {
           color: rgb(132, 132, 132);
           font-weight: 300;
           background-color: white;
+          i {
+              font-size: 20px;
+              padding-right: 10px;
+            //   color: silver;
+          }
         }
-
-        // .item {
-        //     .child {
-        //         .hidden {
-        //             visibility: hidden;
-        //           }
-        //     }
-        // }
       }
     }
   }
