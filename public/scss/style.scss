@@ -1,5 +1,15 @@
 @import "./variables.scss";
 
+%message-shared {
+  display: inline-block;
+  font-size: 12px;
+  color: rgb(46, 46, 46);
+  font-weight: 300;
+  border-radius: 3px;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+
 * {
   font-family: "Inter", sans-serif;
 }
@@ -49,6 +59,16 @@ main {
           background-color: rgba(236, 234, 234, 0.324);
           padding: 16px;
           border-bottom: 1px solid $borderColor;
+          .separator {
+            color: $borderColor;
+            padding: 0 5px;
+          }
+          .tag {
+            @extend %message-shared;
+            vertical-align: middle;
+            background-color: rgba(236, 234, 234, 0.324);
+            border: 1px solid $borderColor;
+          }
           .child {
             width: 170px;
             overflow: hidden;
@@ -56,15 +76,8 @@ main {
               visibility: hidden;
             }
 
-            span.responsible {
-                display: inline-block;
-                // margin: 10px;
-                font-size: 12px;
-                color: rgb(46, 46, 46);
-                font-weight: 300;
-                border-radius: 3px;
-                padding: 4px 7px;
-                white-space: nowrap;
+            span.status {
+              @extend %message-shared;
             }
           }
           .name-cell {
@@ -73,14 +86,9 @@ main {
         }
         .row {
           color: rgb(132, 132, 132);
-        //   span {
-            // .responsible {
-            //   padding: 5px;
-            //   // }
-            // }
-            
-            .first-contact {
-              background-color: #9bcdfd;
+
+          .first-contact {
+            background-color: #9bcdfd;
           }
           .negotiation {
             background-color: #fbfdad;
@@ -94,15 +102,14 @@ main {
           font-weight: 300;
           background-color: white;
           i {
-              color: white;
-              background-color: silver;
-              text-align: center;
+            color: white;
+            background-color: silver;
+            text-align: center;
 
             font-size: 13px;
             padding: 8px;
             margin-right: 10px;
             border-radius: 20px;
-            //   color: silver;
           }
         }
       }

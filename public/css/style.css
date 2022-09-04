@@ -1,3 +1,15 @@
+main .wrapper .table .content .head .child span.status,
+main .wrapper .table .content .item .child span.status, main .wrapper .table .content .head .tag,
+main .wrapper .table .content .item .tag {
+  display: inline-block;
+  font-size: 12px;
+  color: rgb(46, 46, 46);
+  font-weight: 300;
+  border-radius: 3px;
+  padding: 4px 7px;
+  white-space: nowrap;
+}
+
 * {
   font-family: "Inter", sans-serif;
 }
@@ -65,6 +77,17 @@ main .wrapper .table .content .item {
   padding: 16px;
   border-bottom: 1px solid rgba(211, 211, 211, 0.457);
 }
+main .wrapper .table .content .head .separator,
+main .wrapper .table .content .item .separator {
+  color: rgba(211, 211, 211, 0.457);
+  padding: 0 5px;
+}
+main .wrapper .table .content .head .tag,
+main .wrapper .table .content .item .tag {
+  vertical-align: middle;
+  background-color: rgba(236, 234, 234, 0.324);
+  border: 1px solid rgba(211, 211, 211, 0.457);
+}
 main .wrapper .table .content .head .child,
 main .wrapper .table .content .item .child {
   width: 170px;
@@ -73,16 +96,6 @@ main .wrapper .table .content .item .child {
 main .wrapper .table .content .head .child .hidden,
 main .wrapper .table .content .item .child .hidden {
   visibility: hidden;
-}
-main .wrapper .table .content .head .child span.responsible,
-main .wrapper .table .content .item .child span.responsible {
-  display: inline-block;
-  font-size: 12px;
-  color: rgb(46, 46, 46);
-  font-weight: 300;
-  border-radius: 3px;
-  padding: 4px 7px;
-  white-space: nowrap;
 }
 main .wrapper .table .content .head .name-cell,
 main .wrapper .table .content .item .name-cell {

@@ -49,25 +49,30 @@
                 <div class="row item">
                   <div class=""><span>+</span></div>
 
-                  <div class="name-cell">{{name}}</div>
+                  <div class="name-cell">
+                    {{name}}
+                    {{#each _embedded.tags}}
+                     <span class="separator"> | </span> <span class="tag">{{name}}</span>
+                    {{/each}}
+                  </div>
                   {{#if firstContact}}
                     <div class="child"><span
-                        class="responsible first-contact"
+                        class="status first-contact"
                       >{{status_id}}</span></div>
                   {{/if}}
                   {{#if negotiation}}
                     <div class="child"><span
-                        class="responsible negotiation"
+                        class="status negotiation"
                       >{{status_id}}</span></div>
                   {{/if}}
                   {{#if decisions}}
                     <div class="child"><span
-                        class="responsible decisions"
+                        class="status decisions"
                       >{{status_id}}</span></div>
                   {{/if}}
                   {{#if agreement}}
                     <div class="child"><span
-                        class="responsible agreement"
+                        class="status agreement"
                       >{{status_id}}</span></div>
                   {{/if}}
 
@@ -77,6 +82,7 @@
                     ></i>{{responsible_user_id}}</div>
                   <div class="child">{{created_at}}</div>
                   <div class="child">{{separatePriceWithSpace price}} ₽</div>
+                
                 </div>
               {{/each}}
             </div>

@@ -35,13 +35,7 @@ app.engine("hbs", engine({
 app.use(express.static(path.resolve() + "/public"));
 
 
-// function separatePriceWithSpace(price) {
-//     num = '' + price;
-//     return num.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
-// }
 
-
-// console.log(price(12345566))
 
 
 app.get('/', async (req, res) => {
@@ -57,7 +51,7 @@ app.get('/', async (req, res) => {
     const leadsWithStatuses = changeDate(leadsWithUsersNames);
     const answer = changeStatusIdForStatusText(leadsWithStatuses, statuses)
 
-    console.log(answer);
+    console.log(answer[1]._embedded);
     res.render('home', {
         title: 'Тестовое задание',
         data: answer,
