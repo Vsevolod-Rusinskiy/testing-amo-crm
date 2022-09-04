@@ -49,9 +49,10 @@ app.get('/', async (req, res) => {
     // change id for names;
     const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
     const leadsWithStatuses = changeDate(leadsWithUsersNames);
-    const answer = changeStatusIdForStatusText(leadsWithStatuses, statuses)
+    const answer = changeStatusIdForStatusText(leadsWithStatuses, statuses);
 
-    console.log(answer[1]._embedded);
+    console.log(answer[0]._embedded.contacts);
+    // console.log(answer[1]._embedded);
     res.render('home', {
         title: 'Тестовое задание',
         data: answer,
@@ -61,7 +62,7 @@ app.get('/', async (req, res) => {
     async function getLeads() {
         let answer = await axios({
             method: 'get',
-            url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads',
+            url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
             headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': "application/json"
@@ -69,8 +70,8 @@ app.get('/', async (req, res) => {
         })
 
         leads = answer.data._embedded.leads;
-        // console.log(leads)
-        return leads
+        // console.log(answer.data._embedded.leads[1]._embedded.contacts);
+        return leads;
     }
 
     async function getUsers() {

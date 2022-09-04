@@ -1,6 +1,6 @@
 # Local Netlify folder
+.env
 node_modules
 z_imnap
 
 *.zip
-.env
