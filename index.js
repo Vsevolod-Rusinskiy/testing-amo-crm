@@ -24,9 +24,24 @@ app.set('view engine', 'hbs');
 app.engine("hbs", engine({
     layoutsDir: "views/",
     defaultLayout: "home",
-    extname: "hbs"
+    extname: "hbs",
+    helpers: {
+        separatePriceWithSpace: function separatePriceWithSpace(price) {
+            num = '' + price;
+            return num.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
+        }
+    }
 }));
 app.use(express.static(path.resolve() + "/public"));
+
+
+// function separatePriceWithSpace(price) {
+//     num = '' + price;
+//     return num.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
+// }
+
+
+// console.log(price(12345566))
 
 
 app.get('/', async (req, res) => {
@@ -109,11 +124,6 @@ const statuses = {
     50272645: 'Согласование договора'
 }
 
-// const statusColor = {
-//     firstContact: 'color: red',
-//     negotiation: 'color: green'
-// }
-
 function convertDate(unix_timestamp) {
     const date = new Date(unix_timestamp * 1000);
     return date.toLocaleString("ru-RU", {
@@ -152,23 +162,6 @@ function changeStatusIdForStatusText(leads, statuses) {
                 if (elem.status_id === "Согласование договора") {
                     elem.agreement = true;
                 }
-
-
-                // switch (elem.status_id) {
-                //     case '"Первичный контакт"':
-                //         elem.firstContact = true;
-                //         break;
-                //     case 'Переговоры':
-                //         elem.negotiation = true;
-                //         break;
-                //     case 'Принимают решения':
-                //         elem.decisions = true;
-                //         break;
-                //     case 'Согласование договора':
-                //         elem.agreement = true;
-                //         break;
-                // }
-
             }
         }
 
