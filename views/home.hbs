@@ -33,7 +33,7 @@
           <div class="table">
             <div class="content">
               <div class="head item">
-                <div class="hidden">+</div>
+                <div class="hidden-plus-sign">+</div>
                 <div class="name-cell">Название</div>
                 <div class="child">Статус</div>
                 <div class="child">Ответственный</div>
@@ -47,12 +47,12 @@
               {{!-- {{data.status_id}} --}}
               {{#each data}}
                 <div class="row item">
-                  <div class=""><span>+</span></div>
-
+                  <div><span class="plus-sign">+</span></div>
                   <div class="name-cell">
                     {{name}}
                     {{#each _embedded.tags}}
-                     <span class="separator"> | </span> <span class="tag">{{name}}</span>
+                      <span class="separator"> | </span>
+                      <span class="tag">{{name}}</span>
                     {{/each}}
                   </div>
                   {{#if firstContact}}
@@ -75,22 +75,36 @@
                         class="status agreement"
                       >{{status_id}}</span></div>
                   {{/if}}
-
                   <div class="child">
                     <i
                       class="fa-regular fa-user"
                     ></i>{{responsible_user_id}}</div>
                   <div class="child">{{created_at}}</div>
                   <div class="child">{{separatePriceWithSpace price}} ₽</div>
-                
+                </div>
+                <div class="row item contacts visible">
+                {{#each _embedded.contacts}}
+                  <div class="child name-cell">
+                    <i class="fa-regular fa-user"></i>{{name}}
+                      {{#if phone}}
+                      <span class="separator"> | </span>
+                      <span class="tag"><a href="tel:{{phone}}"><i class="fa-solid fa-phone"></i></a></span>
+                      {{/if}}
+                      {{#if email}}
+                      <span class="separator"> | </span>
+                      <span class="tag"><a href="mailto:{{email}}"><i class="fa-solid fa-envelope"></i></a></span>
+                      {{/if}}
+                  </div>
+                {{/each}}
                 </div>
               {{/each}}
+              </div>
             </div>
           </div>
         </div>
       </main>
     </section>
-    {{! <script src="script.js"></script> }}
+    <script src="/js/home.js"></script> 
 
   </body>
 </html>

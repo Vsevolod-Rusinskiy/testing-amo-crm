@@ -46,7 +46,7 @@ main {
         height: 100%;
 
         .head {
-          .hidden {
+          .hidden-plus-sign {
             visibility: hidden;
           }
         }
@@ -63,6 +63,7 @@ main {
             color: $borderColor;
             padding: 0 5px;
           }
+
           .tag {
             @extend %message-shared;
             vertical-align: middle;
@@ -72,10 +73,7 @@ main {
           .child {
             width: 170px;
             overflow: hidden;
-            .hidden {
-              visibility: hidden;
-            }
-
+          
             span.status {
               @extend %message-shared;
             }
@@ -85,6 +83,11 @@ main {
           }
         }
         .row {
+          div {
+            &:first-child {
+              cursor: pointer;
+            }
+          }
           color: rgb(132, 132, 132);
 
           .first-contact {
@@ -111,6 +114,34 @@ main {
             margin-right: 10px;
             border-radius: 20px;
           }
+        }
+        .contacts {
+            // display: none;
+          // color: rebeccapurple;
+          flex-direction: column;
+          align-content: flex-start;
+          margin: 0 0 5px 0px;
+          padding-left: 50px;
+          background-color: rgba(236, 234, 234, 0.324);
+          .child {
+            margin-bottom: 10px;
+            // border-bottom: 1px solid $borderColor;
+            .tag {
+                border: none;
+                background-color: F9F8F8;
+                i {
+                    font-size: 13px;
+                    background-color: F9F8F8;
+                    color: #3b9af2;
+                    padding: 0;
+                    margin-right: 0;
+                }
+            }
+          }
+
+        }
+        .visible {
+            display: none;
         }
       }
     }
