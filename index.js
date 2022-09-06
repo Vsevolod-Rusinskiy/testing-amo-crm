@@ -56,7 +56,7 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-});
+}); 
 
 async function getLeadsWithContactsId() {
     let answer = await axios({
