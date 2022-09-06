@@ -43,8 +43,9 @@ main .wrapper .search-pannel {
 }
 main .wrapper .search-pannel input {
   padding: 4px 30px 4px 11px;
-  border: 1px solid rgba(211, 211, 211, 0.457);
+  border: 1px solid silver;
   border-radius: 3px;
+  width: 400px;
 }
 main .wrapper .table {
   padding: 24px;
@@ -101,6 +102,9 @@ main .wrapper .table .content .row {
   color: rgb(132, 132, 132);
   font-weight: 300;
   background-color: white;
+}
+main .wrapper .table .content .row div {
+  min-width: 20px;
 }
 main .wrapper .table .content .row div:first-child {
   cursor: pointer;

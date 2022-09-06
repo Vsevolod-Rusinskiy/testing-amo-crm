@@ -33,8 +33,9 @@ main {
       border-bottom: 1px solid $borderColor;
       input {
         padding: 4px 30px 4px 11px;
-        border: 1px solid $borderColor;
+        border: 1px solid silver;
         border-radius: 3px;
+        width: 400px;
       }
     }
     .table {
@@ -84,8 +85,10 @@ main {
         }
         .row {
           div {
+              min-width: 20px;
             &:first-child {
               cursor: pointer;
+          
             }
           }
           color: rgb(132, 132, 132);

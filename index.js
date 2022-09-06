@@ -1,7 +1,6 @@
 const express = require("express");
 const cors = require('cors');
 const path = require("path");
-// const hbs = require('hbs');
 const {
     engine
 } = require('express-handlebars')
@@ -12,7 +11,7 @@ require('dotenv').config()
 
 const app = express();
 
-const PORT = process.env.SERVER_PORT || 8005;
+const PORT = process.env.SERVER_PORT || 8095;
 const token = process.env.TOKEN
 
 app.use(cors({
@@ -40,68 +39,65 @@ app.use(express.static(path.resolve() + "/public"));
 app.get('/', async (req, res) => {
 
 
-    // TODO Promise.all ???
-
     await getLeadsWithContactsId();
     await getUsers();
     const contacts = await getContacts();
 
-    // change id for names;
     const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
     const leadsWithStatuses = changeDate(leadsWithUsersNames);
     const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
     const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
     const answer = leadsWithContactsEmailAndPhone;
 
-    // console.log(chalk.blue.bgGreen.bold(answer[0]))
-    // console.log(chalk.blue.bgGreen.bold(addContactsEmailAndPhone(leadsWithTextStatuses, contacts)))
+
 
     res.render('home', {
         title: 'Тестовое задание',
         data: answer,
     })
 
-    async function getLeadsWithContactsId() {
-        let answer = await axios({
-            method: 'get',
-            url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': "application/json"
-            },
-        })
 
-        leads = answer.data._embedded.leads;
-        return leads;
-    }
-
-    async function getUsers() {
-        const answer = await axios({
-            method: 'get',
-            url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': "application/json"
-            },
-        });
-        users = answer.data._embedded.users;
-        // console.log('>>>',users)
-        return users;
-    }
-
-    async function getContacts() {
-        const answer = await axios({
-            method: 'get',
-            url: 'https://alekseirizchkov.amocrm.ru/api/v4/contacts',
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': "application/json"
-            },
-        });
-        const contacts = answer.data._embedded.contacts;
-        return contacts;
-    }
 });
+
+async function getLeadsWithContactsId() {
+    let answer = await axios({
+        method: 'get',
+        url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json"
+        },
+    })
+
+    leads = answer.data._embedded.leads;
+    return leads;
+}
+
+async function getUsers() {
+    const answer = await axios({
+        method: 'get',
+        url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json"
+        },
+    });
+    users = answer.data._embedded.users;
+    return users;
+}
+
+async function getContacts() {
+    const answer = await axios({
+        method: 'get',
+        url: 'https://alekseirizchkov.amocrm.ru/api/v4/contacts',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json"
+        },
+    });
+    const contacts = answer.data._embedded.contacts;
+    return contacts;
+}
 
 
 function putUsersNamesAndIdInObj(users) {
@@ -125,19 +121,18 @@ function changeNameIdForNameText(leads, names) {
     }
     return leads;
 }
+
 function addContactsEmailAndPhone(leads, contacts) {
     for (const leadsElem of leads) {
         for (const LeadsContactsfield of leadsElem._embedded.contacts) {
             for (let contact of contacts) {
                 if (LeadsContactsfield.id === contact.id) {
                     for (const fields_values of contact.custom_fields_values) {
-                      LeadsContactsfield.name = contact.name;
+                        LeadsContactsfield.name = contact.name;
                         if (fields_values.field_code === 'EMAIL') {
-                            console.log(fields_values.values[0].value);
                             LeadsContactsfield.email = fields_values.values[0].value;
                         }
                         if (fields_values.field_code === 'PHONE') {
-                            console.log(fields_values.values[0].value);
                             LeadsContactsfield.phone = fields_values.values[0].value;
                         }
                     }
@@ -145,7 +140,6 @@ function addContactsEmailAndPhone(leads, contacts) {
             }
         }
     }
-    console.log(leads[0]._embedded)
     return leads;
 }
 
@@ -200,7 +194,38 @@ function changeStatusIdForStatusText(leads, statuses) {
     return leads
 }
 
-// console.log(chalk.blue.bgGreen.bold(1))
+
+app.get('/query/:query', function (req, res) {
+    const queryString = encodeURI(req.params.query);
+    getleadsFromSearch();
+    async function getleadsFromSearch() {
+        try {
+            const answer = await axios({
+                method: 'get',
+                url: `https://alekseirizchkov.amocrm.ru/api/v4/leads?query=${queryString}`,
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': "application/json"
+                },
+            });
+
+            leadsFromSearch = await answer.data._embedded
+            leadsFromSearch = await JSON.stringify(answer.data._embedded);
+
+            console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
+            console.log(chalk.white.bgRed.bold( leadsFromSearch))
+            console.log(typeof leadsFromSearch)
+
+            if (leadsFromSearch === undefined) {
+               return res.status(500).send({error: 'Error 🤷'})
+            }
+            res.status(200).send('ok')
+            return leadsFromSearch;
+        } catch (error) {
+            console.log('Error 🤷', error.message);
+        }
+    }
+})
 
 
 app.listen(PORT, (req, res) => {
