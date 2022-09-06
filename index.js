@@ -38,7 +38,7 @@ app.use(express.static(path.resolve() + "/public"));
 
 app.get('/', async (req, res) => {
 
-
+try {
     await getLeadsWithContactsId();
     await getUsers();
     const contacts = await getContacts();
@@ -49,12 +49,14 @@ app.get('/', async (req, res) => {
     const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
     const answer = leadsWithContactsEmailAndPhone;
 
-
-
     res.render('home', {
         title: 'Тестовое задание',
         data: answer,
     })
+} catch (error) {
+    console.log(error);
+}
+    
 
 
 });
