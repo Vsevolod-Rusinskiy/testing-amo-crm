@@ -38,27 +38,24 @@ app.use(express.static(path.resolve() + "/public"));
 
 app.get('/', async (req, res) => {
 
-try {
-    await getLeadsWithContactsId();
-    await getUsers();
-    const contacts = await getContacts();
+    try {
+        await getLeadsWithContactsId();
+        await getUsers();
+        const contacts = await getContacts();
 
-    const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
-    const leadsWithStatuses = changeDate(leadsWithUsersNames);
-    const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
-    const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
-    const answer = leadsWithContactsEmailAndPhone;
+        const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
+        const leadsWithStatuses = changeDate(leadsWithUsersNames);
+        const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
+        const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
+        const answer = leadsWithContactsEmailAndPhone;
 
-    res.render('home', {
-        title: 'Тестовое задание',
-        data: answer,
-    })
-} catch (error) {
-    console.log(error);
-}
-    
-
-
+        res.render('home', {
+            title: 'Тестовое задание',
+            data: answer,
+        })
+    } catch (error) {
+        console.log(error);
+    }
 });
 
 async function getLeadsWithContactsId() {
