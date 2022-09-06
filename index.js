@@ -7,12 +7,12 @@ const {
 const axios = require('axios');
 const chalk = require('chalk');
 
-require('dotenv').config()
+require('dotenv').config();
 
 const app = express();
 
 const PORT = process.env.SERVER_PORT || 8095;
-const token = process.env.TOKEN
+const token = process.env.TOKEN;
 
 
 app.use(cors({
@@ -209,8 +209,8 @@ app.get('/query/:query', function (req, res) {
                 },
             });
 
-            leadsFromSearch = await answer.data._embedded
-            leadsFromSearch = await JSON.stringify(answer.data._embedded);
+            // leadsFromSearch = await answer.data._embedded
+            leadsFromSearch =  await JSON.stringify(answer.data._embedded);
 
             console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
             console.log(chalk.white.bgRed.bold(leadsFromSearch))
@@ -221,7 +221,8 @@ app.get('/query/:query', function (req, res) {
                     error: 'Error 🤷'
                 })
             }
-            res.status(200).send(leadsFromSearch)
+            res.status(200).send(leadsFromSearch);
+
             return leadsFromSearch;
         } catch (error) {
             console.log('Error 🤷', error.message);
