@@ -217,9 +217,9 @@ app.get('/query/:query', function (req, res) {
             console.log(typeof leadsFromSearch)
 
             if (leadsFromSearch === undefined) {
-               return res.status(500).send({error: 'Error 🤷'})
+               return res.status(200).send({error: 'Error 🤷'})
             }
-            res.status(200).send('ok')
+            res.status(200).send(leadsFromSearch)
             return leadsFromSearch;
         } catch (error) {
             console.log('Error 🤷', error.message);

@@ -25,7 +25,7 @@ search.addEventListener('keyup', function () {
         promise.then(response => {
             return response.json();
         }).then(data => {
-            console.log('data',data.error)
+            console.log(data);
         })
     }
 })
