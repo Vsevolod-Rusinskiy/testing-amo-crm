@@ -16,7 +16,6 @@
 
 body {
   background-color: rgb(240, 242, 245);
-
 }
 main {
   padding: 50px;
@@ -39,14 +38,23 @@ main {
         width: 400px;
       }
     }
+
     .table {
       padding: 24px;
       font-size: 14px;
+
+      .no-data {
+        // display: none;
+        text-align: center;
+      }
+
+      .display {
+        display: none;
+      }
       .content {
         flex-wrap: wrap;
         align-content: center;
         height: 100%;
-
         .head {
           .hidden-plus-sign {
             visibility: hidden;
@@ -61,6 +69,7 @@ main {
           background-color: rgba(236, 234, 234, 0.324);
           padding: 16px;
           border-bottom: 1px solid $borderColor;
+          // border-bottom: 1px solid red;
           .separator {
             color: $borderColor;
             padding: 0 5px;
@@ -75,7 +84,7 @@ main {
           .child {
             width: 170px;
             overflow: hidden;
-          
+
             span.status {
               @extend %message-shared;
             }
@@ -86,10 +95,9 @@ main {
         }
         .row {
           div {
-              min-width: 20px;
+            min-width: 20px;
             &:first-child {
               cursor: pointer;
-          
             }
           }
           color: rgb(132, 132, 132);
@@ -120,7 +128,7 @@ main {
           }
         }
         .contacts {
-            // display: none;
+          // display: none;
           // color: rebeccapurple;
           flex-direction: column;
           align-content: flex-start;
@@ -131,21 +139,20 @@ main {
             margin-bottom: 10px;
             // border-bottom: 1px solid $borderColor;
             .tag {
-                border: none;
+              border: none;
+              background-color: F9F8F8;
+              i {
+                font-size: 13px;
                 background-color: F9F8F8;
-                i {
-                    font-size: 13px;
-                    background-color: F9F8F8;
-                    color: #3b9af2;
-                    padding: 0;
-                    margin-right: 0;
-                }
+                color: #3b9af2;
+                padding: 0;
+                margin-right: 0;
+              }
             }
           }
-
         }
         .visible {
-            display: none;
+          display: none;
         }
       }
     }

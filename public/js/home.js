@@ -1,9 +1,10 @@
-const wrapper = document.querySelector('.content');
+const content = document.querySelector('.content');
 const search = document.querySelector('#search');
+const noData = document.querySelector('.no-data');
 
 
 
-wrapper.addEventListener('click', function (event) {
+content.addEventListener('click', function (event) {
     event.preventDefault();
     if (event.target && event.target.classList.contains('plus-sign')) {
         let elem = event.target;
@@ -12,20 +13,22 @@ wrapper.addEventListener('click', function (event) {
     }
 })
 
-
-search.addEventListener('keyup', function () {
-
+search.addEventListener('keyup', async function () {
     let queyrString = this.value;
-    
-    if (queyrString.length >= 3 ) {
-        const promise = fetch(`/query/${queyrString}`, {
+
+    if (queyrString.length >= 3) {
+        const promise = await fetch(`/query/${queyrString}`, {
             method: 'GET',
         });
+        response = await promise.json();
 
-        promise.then(response => {
-            return response.json();
-        }).then(data => {
-            console.log(data);
-        })
+        if (response.data) {
+            noData.classList.remove('display')
+            content.classList.add('display')
+        }
+        if (!response.data) {
+            noData.classList.add('display')
+            content.classList.remove('display')
+        }
     }
 })

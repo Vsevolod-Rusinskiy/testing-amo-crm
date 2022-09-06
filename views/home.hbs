@@ -31,7 +31,9 @@
             </div>
           </div>
           <div class="table">
-            <div class="content">
+              <div class="no-data display"><span>Нет данных 🤷‍♂️ </span> </div>
+            <div class="content ">
+                
               <div class="head item">
                 <div class="hidden-plus-sign">+</div>
                 <div class="name-cell">Название</div>
@@ -40,11 +42,8 @@
                 <div class="child">Дата создания</div>
                 <div class="child">Бюджет</div>
               </div>
-              {{!-- {{#if statusColor}}
-                <p>hello</p>
-                {{!-- {{ELSE}} --}}
-              {{!-- {{/if}} --}}
-              {{!-- {{data.status_id}} --}}
+          
+
               {{#each data}}
                 <div class="row item">
                   <div><span class="plus-sign">+</span></div>

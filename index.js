@@ -199,25 +199,21 @@ function changeStatusIdForStatusText(leads, statuses) {
 //111
 app.get('/query/:query', async function (req, res) {
     const queryString = encodeURI(req.params.query);
-    getleadsFromSearch(queryString);
+    // getleadsFromSearch(queryString);
     const leadsFromSearch = await getleadsFromSearch(queryString);
-     getIdFromLeadsString(leadsFromSearch);
 
-  
+    const idFromLeadsString =  getIdFromLeadsString(leadsFromSearch);
+    console.log(chalk.blue.bgGreen.bold(idFromLeadsString))
 
-    if (leadsFromSearch === undefined) {
-        return res.status(200).send({
-            error: 'Error'
-        })
+
+
+    if (leadsFromSearch === null) {
+     
+        return res.status(200).send({'data': 'nodata'});
     } else {
         return res.status(200).send(leadsFromSearch);
-
     }
 
-    // res.render('home', {
-    //     title: 'Тестовое задание',
-    //     data: answer,
-    // })
 })
 
 // -------------- SEARCH FUNC -----------------
@@ -233,46 +229,33 @@ async function getleadsFromSearch(queryString) {
                 'Content-Type': "application/json"
             },
         });
+        const answer = await response.data
+        if (answer === '') {
+            return null;
+        }
         const leadsFromSearch = await response.data._embedded.leads;
         return leadsFromSearch;
     } catch (error) {
-        console.log('Something went wrong...')
+        console.log('Something went wrong...', error)
     }
 }
 
-async function getIdFromLeadsString(leads) {
+function getIdFromLeadsString(leads) {
+    if(leads === null){
+        return null;
+    }
+
     const idFromLeadsArray = [];
-    
+
     for (const lead of leads) {
-        idFromLeadsArray.push(lead.id)
         console.log(lead.id)
-        console.log(idFromLeadsArray)
+        idFromLeadsArray.push(lead.id)
+
     }
     const idFromLeadsString = idFromLeadsArray.join(',');
+    console.log()
     return idFromLeadsString;
 }
-
-
-// } catch (error) {
-//     console.log('Error ', error.message, error);
-// }
-
-// leadsFromSearch = JSON.stringify(answer.data._embedded);
-
-// console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
-// console.log(chalk.white.bgRed.bold(leadsFromSearch))
-// console.log(typeof leadsFromSearch)
-
-// взять айди сделки строкой const str = "2841691,2841687" из inputa
-// сделать новую функию await getLeadsWithContactsIdFromSerch(str); -получить только свои сделки с контактами передавая айдишники
-// https://alekseirizchkov.amocrm.ru/api/v4/leads?with=2841691,2841687&with=contacts
-
-// перезапускаем все функции
-
-
-
-
-// console.log(getleadsFromSearch())
 
 
 
