@@ -213,11 +213,13 @@ app.get('/query/:query', function (req, res) {
             leadsFromSearch = await JSON.stringify(answer.data._embedded);
 
             console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
-            console.log(chalk.white.bgRed.bold( leadsFromSearch))
+            console.log(chalk.white.bgRed.bold(leadsFromSearch))
             console.log(typeof leadsFromSearch)
 
             if (leadsFromSearch === undefined) {
-               return res.status(200).send({error: 'Error 🤷'})
+                return res.status(200).send({
+                    error: 'Error 🤷'
+                })
             }
             res.status(200).send(leadsFromSearch)
             return leadsFromSearch;
@@ -228,6 +230,12 @@ app.get('/query/:query', function (req, res) {
 })
 
 
-app.listen(PORT, (req, res) => {
-    console.log(`Server is working on port ${PORT}`);
-});
+
+try {
+    app.listen(PORT, (req, res) => {
+        console.log(`Server is working on port ${PORT}`);
+    });
+} catch (err) {
+    // next(err);
+    console.log(err)
+}
