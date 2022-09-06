@@ -33,6 +33,7 @@ app.engine("hbs", engine({
         }
     }
 }));
+
 app.use(express.static(path.resolve() + "/public"));
 
 
@@ -57,7 +58,7 @@ app.get('/', async (req, res) => {
     } catch (error) {
         console.log(error);
     }
-}); 
+});
 
 async function getLeadsWithContactsId() {
     let answer = await axios({
@@ -110,6 +111,7 @@ function putUsersNamesAndIdInObj(users) {
     }
     return usersNamesAndIdInObj;
 }
+
 
 function changeNameIdForNameText(leads, names) {
     for (const elem of leads) {
@@ -194,41 +196,83 @@ function changeStatusIdForStatusText(leads, statuses) {
     return leads
 }
 
-
-app.get('/query/:query', function (req, res) {
+//111
+app.get('/query/:query', async function (req, res) {
     const queryString = encodeURI(req.params.query);
-    getleadsFromSearch();
-    async function getleadsFromSearch() {
-        try {
-            const answer = await axios({
-                method: 'get',
-                url: `https://alekseirizchkov.amocrm.ru/api/v4/leads?query=${queryString}`,
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': "application/json"
-                },
-            });
+    getleadsFromSearch(queryString);
+    const leadsFromSearch = await getleadsFromSearch(queryString);
+     getIdFromLeadsString(leadsFromSearch);
 
-            // leadsFromSearch = await answer.data._embedded
-            leadsFromSearch =  await JSON.stringify(answer.data._embedded);
+  
 
-            console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
-            console.log(chalk.white.bgRed.bold(leadsFromSearch))
-            console.log(typeof leadsFromSearch)
+    if (leadsFromSearch === undefined) {
+        return res.status(200).send({
+            error: 'Error'
+        })
+    } else {
+        return res.status(200).send(leadsFromSearch);
 
-            if (leadsFromSearch === undefined) {
-                return res.status(200).send({
-                    error: 'Error 🤷'
-                })
-            }
-            res.status(200).send(leadsFromSearch);
-
-            return leadsFromSearch;
-        } catch (error) {
-            console.log('Error 🤷', error.message);
-        }
     }
+
+    // res.render('home', {
+    //     title: 'Тестовое задание',
+    //     data: answer,
+    // })
 })
+
+// -------------- SEARCH FUNC -----------------
+
+
+async function getleadsFromSearch(queryString) {
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `https://alekseirizchkov.amocrm.ru/api/v4/leads?query=${queryString}`,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
+        const leadsFromSearch = await response.data._embedded.leads;
+        return leadsFromSearch;
+    } catch (error) {
+        console.log('Something went wrong...')
+    }
+}
+
+async function getIdFromLeadsString(leads) {
+    const idFromLeadsArray = [];
+    
+    for (const lead of leads) {
+        idFromLeadsArray.push(lead.id)
+        console.log(lead.id)
+        console.log(idFromLeadsArray)
+    }
+    const idFromLeadsString = idFromLeadsArray.join(',');
+    return idFromLeadsString;
+}
+
+
+// } catch (error) {
+//     console.log('Error ', error.message, error);
+// }
+
+// leadsFromSearch = JSON.stringify(answer.data._embedded);
+
+// console.log(chalk.white.bgRed.bold(typeof leadsFromSearch))
+// console.log(chalk.white.bgRed.bold(leadsFromSearch))
+// console.log(typeof leadsFromSearch)
+
+// взять айди сделки строкой const str = "2841691,2841687" из inputa
+// сделать новую функию await getLeadsWithContactsIdFromSerch(str); -получить только свои сделки с контактами передавая айдишники
+// https://alekseirizchkov.amocrm.ru/api/v4/leads?with=2841691,2841687&with=contacts
+
+// перезапускаем все функции
+
+
+
+
+// console.log(getleadsFromSearch())
 
 
 
