@@ -36,13 +36,17 @@ app.engine("hbs", engine({
 
 app.use(express.static(path.resolve() + "/public"));
 
+let superAnswer = false;
+let inputValue = '';
+
+// -------------- ROUTS ------------------------------------------------------------------------------------------------------
 
 
 app.get('/', async (req, res) => {
 
     try {
-        await getLeadsWithContactsId();
-        await getUsers();
+        const leads = await getLeadsWithContactsId();
+        const users = await getUsers();
         const contacts = await getContacts();
 
         const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
@@ -50,15 +54,77 @@ app.get('/', async (req, res) => {
         const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
         const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
         const answer = leadsWithContactsEmailAndPhone;
+        // console.log(chalk.blue.bgGreen.bold(answer));
 
-        res.render('home', {
-            title: 'Тестовое задание',
-            data: answer,
-        })
+        if (superAnswer === false) {
+            res.render('home', {
+                title: 'Тестовое задание',
+                data: answer,
+            })
+        } else {
+            console.log('>>>//', !!superAnswer);
+
+            res.render('home', {
+                title: 'Тестовое задание',
+                data: superAnswer,
+                inputValue : inputValue
+            })
+        }
+        if (superAnswer === true) {
+            console.log('>>>//', !!superAnswer);
+
+            res.render('home', {
+                title: 'Тестовое задание',
+                data: superAnswer,
+            })
+        }
+
+        // res.render('home', {
+        //     title: 'Тестовое задание',
+        //     data: 'dont work ',
+        // })
+
     } catch (error) {
         console.log(error);
     }
 });
+
+//111
+app.get('/query/:query', async function (req, res) {
+
+    const queryString = encodeURI(req.params.query);
+    const leadsFromSearch = await getleadsFromSearch(queryString);
+
+    if (leadsFromSearch === null) {
+        return res.status(200).send({
+            'data': 'nodata'
+        });
+    }
+
+    const idFromLeadsString = getIdFromLeadsString(leadsFromSearch);
+
+    const leads = await getleadsFromSearchById(idFromLeadsString);
+    const users = await getUsers();
+    const contacts = await getContacts();
+
+    console.log(chalk.white.bgBlue.bold(leads))
+
+
+    const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
+    const leadsWithStatuses = changeDate(leadsWithUsersNames);
+    const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
+    const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts);
+    const answer = leadsWithContactsEmailAndPhone;
+
+    superAnswer = answer;
+    inputValue = req.params.query;
+
+    res.status(200).send({
+        'data': answer
+    });
+})
+
+// -------------- FUNC ------------------------------------------------------------------------------------------------------
 
 async function getLeadsWithContactsId() {
     let answer = await axios({
@@ -70,7 +136,7 @@ async function getLeadsWithContactsId() {
         },
     })
 
-    leads = answer.data._embedded.leads;
+    const leads = await answer.data._embedded.leads;
     return leads;
 }
 
@@ -83,7 +149,7 @@ async function getUsers() {
             'Content-Type': "application/json"
         },
     });
-    users = answer.data._embedded.users;
+    const users = await answer.data._embedded.users;
     return users;
 }
 
@@ -96,10 +162,9 @@ async function getContacts() {
             'Content-Type': "application/json"
         },
     });
-    const contacts = answer.data._embedded.contacts;
+    const contacts = await answer.data._embedded.contacts;
     return contacts;
 }
-
 
 function putUsersNamesAndIdInObj(users) {
     const usersNamesAndIdInObj = {};
@@ -196,27 +261,8 @@ function changeStatusIdForStatusText(leads, statuses) {
     return leads
 }
 
-//111
-app.get('/query/:query', async function (req, res) {
-    const queryString = encodeURI(req.params.query);
-    // getleadsFromSearch(queryString);
-    const leadsFromSearch = await getleadsFromSearch(queryString);
 
-    const idFromLeadsString =  getIdFromLeadsString(leadsFromSearch);
-    console.log(chalk.blue.bgGreen.bold(idFromLeadsString))
-
-
-
-    if (leadsFromSearch === null) {
-     
-        return res.status(200).send({'data': 'nodata'});
-    } else {
-        return res.status(200).send(leadsFromSearch);
-    }
-
-})
-
-// -------------- SEARCH FUNC -----------------
+// -------------- SEARCH FUNC -------------------------------------------------------------------------------------
 
 
 async function getleadsFromSearch(queryString) {
@@ -241,7 +287,7 @@ async function getleadsFromSearch(queryString) {
 }
 
 function getIdFromLeadsString(leads) {
-    if(leads === null){
+    if (leads === null) {
         return null;
     }
 
@@ -249,21 +295,40 @@ function getIdFromLeadsString(leads) {
 
     for (const lead of leads) {
         console.log(lead.id)
-        idFromLeadsArray.push(lead.id)
+        idFromLeadsArray.push('&id[]=' + lead.id)
 
     }
-    const idFromLeadsString = idFromLeadsArray.join(',');
-    console.log()
+    const idFromLeadsString = idFromLeadsArray.join('');
     return idFromLeadsString;
 }
 
+async function getleadsFromSearchById(string) {
+    console.log(string)
+    console.log(typeof string)
+    try {
+        const response = await axios({
+            method: 'get',
+            url: `https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts${string}`,
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
 
+
+        console.log(chalk.blue.bgGreen.bold(response.data._embedded.leads));
+        const leadsFromSearchById = await response.data._embedded.leads;
+        return leadsFromSearchById;
+
+    } catch (error) {
+        console.log('Something went wrong getting leadsFromSearchById ...', error);
+    }
+}
 
 try {
     app.listen(PORT, (req, res) => {
         console.log(`Server is working on port ${PORT}`);
     });
 } catch (err) {
-    // next(err);
     console.log(err)
 }

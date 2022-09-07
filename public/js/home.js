@@ -13,22 +13,30 @@ content.addEventListener('click', function (event) {
     }
 })
 
+
+
 search.addEventListener('keyup', async function () {
     let queyrString = this.value;
 
     if (queyrString.length >= 3) {
         const promise = await fetch(`/query/${queyrString}`, {
             method: 'GET',
-        });
+        })
         response = await promise.json();
+        console.log(response)
 
-        if (response.data) {
-            noData.classList.remove('display')
+        if (response.data === 'nodata') {
+            noData.classList.remove('display');
             content.classList.add('display')
-        }
-        if (!response.data) {
-            noData.classList.add('display')
-            content.classList.remove('display')
+        } else {
+            console.log(this.value)
+
+            noData.classList.add('display');
+            content.classList.remove('display');
+            window.location.href = "/";
+
+            // valueInput = this.value 
         }
     }
+
 })
