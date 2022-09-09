@@ -2,6 +2,12 @@ const content = document.querySelector('.content');
 const search = document.querySelector('#search');
 const noData = document.querySelector('.no-data');
 
+function separatePriceWithSpace(price) {
+    num = '' + price;
+    return num.replace(/(\d)(?=(\d\d\d)+([^\d]|$))/g, "$1 ");
+}
+
+
 
 
 content.addEventListener('click', function (event) {
@@ -17,8 +23,6 @@ content.addEventListener('click', function (event) {
 
 search.addEventListener('keyup', async function () {
     let queyrString = this.value;
-    console.log(this.value)
-    console.log(typeof this.value)
 
     if (this.value === '') {
         // if (this.value === '') {
@@ -28,7 +32,7 @@ search.addEventListener('keyup', async function () {
         response = await promise.json();
         const leads = response.data.answer;
 
-        console.log(leads)
+        // console.log(leads)
 
         for (const lead of leads) {
             let row = document.createElement('div');
@@ -43,32 +47,68 @@ search.addEventListener('keyup', async function () {
             span.classList.add("plus-sign");
 
 
-            // plus.innerHTML = '1'
-            // a = row.append(plus) plus-sign
+            //    ------------------------------
+
+            console.log('>>>', lead);
+
+            //    ------------------------------
 
 
             let nameCell = document.createElement('div');
-            nameCell.innerHTML = lead.name;
+            // nameCell.innerHTML = lead.name;
             row.append(nameCell);
             nameCell.classList.add('name-cell');
-            
-            let spanName = document.createElement('span');
-            spanName.innerHTML = ' | '
-            plus.append(spanName);
-            spanName.classList.add("separator");
+
+            let nameCellName = document.createElement('div');
+            nameCellName.innerHTML = lead.name;
+            nameCell.append(nameCellName);
+            nameCellName.classList.add('name-cell-name');
+
+            let nameCellTags = document.createElement('div');
+            nameCell.append(nameCellTags);
+            nameCellTags.classList.add('name-cell-tags');
+
+            for (const items of lead._embedded.tags) {
+
+                // console.log('III', items.name);
+                let spanSeparator = document.createElement('span');
+                spanSeparator.innerHTML = " | ";
+                nameCellTags.append(spanSeparator);
+                spanSeparator.classList.add("separator");
 
 
+                let spanTag = document.createElement('span');
+                spanTag.innerHTML = items.name;
+                nameCellTags.append(spanTag);
+                spanTag.classList.add("tag");
+            }
+
+            //    ------------------------------
 
             let status = document.createElement('div');
-            // status.innerHTML = lead.status_id;
             row.append(status)
             status.classList.add('child');
 
             let spanStatus = document.createElement('span');
             spanStatus.innerHTML = lead.status_id;
-            status.append(spanStatus)
-            spanStatus.classList.add("status", "first-contact")
-                // "status first-contact")
+            status.append(spanStatus);
+            let statusStyle = 'green';
+            switch (lead.status_id) {
+                case 'Первичный контакт':
+                    statusStyle = 'first-contact';
+                    break;
+                case 'Переговоры':
+                    statusStyle = 'negotiation';
+                    break;
+                case 'Принимают решения':
+                    statusStyle = 'decisions';
+                case 'Согласование договора':
+                    statusStyle = 'decisions';
+                    break;
+            }
+
+            spanStatus.classList.add("status", statusStyle);
+
 
             ///-------------------
 
@@ -80,7 +120,7 @@ search.addEventListener('keyup', async function () {
             let icon = document.createElement('i');
             responsible.append(icon);
             icon.classList.add("fa-regular", "fa-user");
-            
+
             let div = document.createElement('div');
             div.innerHTML = lead.responsible_user_id;
             responsible.append(div);
@@ -96,20 +136,17 @@ search.addEventListener('keyup', async function () {
             let date = document.createElement('div');
             date.innerHTML = lead.created_at;
             row.append(date)
-            status.classList.add('child');
+            date.classList.add('child');
             let price = document.createElement('div');
-            price.innerHTML = lead.price + "₽";
+            // price.innerHTML = lead.price + " ₽ ";
+            price.innerHTML = separatePriceWithSpace(lead.price) + " ₽ ";
 
             row.append(price)
             price.classList.add('child');
 
-
-            //     for (i = 0; i < 5; i++) {
-
-            //         let div = document.createElement('div');
-            //         row.append(div);
-            //         div.classList.add('test', 'item');
-            // }
+            let rowContacts = document.createElement('div');
+            content.append(rowContacts);
+            rowContacts.classList.add('row', 'item', 'contacts');
         }
 
     }

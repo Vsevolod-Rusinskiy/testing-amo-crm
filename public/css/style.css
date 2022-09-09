@@ -112,6 +112,9 @@ main .wrapper .table .content .item .name-cell {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 main .wrapper .table .content .row {
   color: rgb(132, 132, 132);

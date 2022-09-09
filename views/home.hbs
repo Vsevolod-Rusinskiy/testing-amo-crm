@@ -40,13 +40,25 @@
             {{#each data}}
             <div class="row item">
               <div><span class="plus-sign">+</span></div>
+              {{!-- ////////// --}}
+
+
               <div class="name-cell">
-                {{name}}
-                {{#each _embedded.tags}}
-                <span class="separator"> | </span>
-                <span class="tag">{{name}}</span>
-                {{/each}}
+
+                <div class="name-cell-name">
+                  {{name}}
+                </div>
+                <div class="name-cell-tags">
+                  {{#each _embedded.tags}}
+                  <span class="separator"> | </span>
+                  <span class="tag">{{name}}</span>
+                  {{/each}}
+                </div>
+
               </div>
+
+              {{!-- ////////// --}}
+
               {{#if firstContact}}
               <div class="child"><span class="status first-contact">{{status_id}}</span></div>
               {{/if}}
@@ -60,6 +72,9 @@
               <div class="child"><span class="status agreement">{{status_id}}</span></div>
               {{/if}}
 
+
+              {{!-- ////////// --}}
+
               <div class="child">
                 <i class="fa-regular fa-user"></i>
                 <div> {{responsible_user_id}}</div>
@@ -67,6 +82,7 @@
               <div class="child">{{created_at}}</div>
               <div class="child">{{separatePriceWithSpace price}} ₽</div>
             </div>
+            
             <div class="row item contacts visible">
               {{#each _embedded.contacts}}
               <div class="child name-cell">
