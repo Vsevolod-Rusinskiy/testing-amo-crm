@@ -84,6 +84,8 @@ main {
           .child {
             width: 170px;
             overflow: hidden;
+            display: flex;
+            align-items: center;
 
             span.status {
               @extend %message-shared;
@@ -91,6 +93,7 @@ main {
           }
           .name-cell {
             width: 400px;
+            display: flex;
           }
         }
         .row {

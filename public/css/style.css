@@ -99,10 +99,19 @@ main .wrapper .table .content .head .child,
 main .wrapper .table .content .item .child {
   width: 170px;
   overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 main .wrapper .table .content .head .name-cell,
 main .wrapper .table .content .item .name-cell {
   width: 400px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 main .wrapper .table .content .row {
   color: rgb(132, 132, 132);

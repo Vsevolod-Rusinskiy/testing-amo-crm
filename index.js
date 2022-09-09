@@ -6,6 +6,9 @@ const {
 } = require('express-handlebars')
 const axios = require('axios');
 const chalk = require('chalk');
+const {
+    type
+} = require("express/lib/response");
 
 require('dotenv').config();
 
@@ -42,7 +45,7 @@ let inputValue = '';
 // -------------- ROUTS ------------------------------------------------------------------------------------------------------
 
 
-app.get('/', async (req, res) => {
+app.get(['/', '/:query'], async (req, res) => {
 
     try {
         const leads = await getLeadsWithContactsId();
@@ -54,35 +57,46 @@ app.get('/', async (req, res) => {
         const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
         const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
         const answer = leadsWithContactsEmailAndPhone;
-        // console.log(chalk.blue.bgGreen.bold(answer));
 
-        if (superAnswer === false) {
+
+        console.log(chalk.white.bgBlue.bold(req.params.query));
+        if (req.params.query === 'all-leads') {
+            res.status(200).send({
+                'data': {
+                    data: "data",
+                    answer: answer
+                }
+
+            });
+            
+        } else {
             res.render('home', {
                 title: 'Тестовое задание',
                 data: answer,
             })
-        } else {
-            console.log('>>>//', !!superAnswer);
-
-            res.render('home', {
-                title: 'Тестовое задание',
-                data: superAnswer,
-                inputValue : inputValue
-            })
-        }
-        if (superAnswer === true) {
-            console.log('>>>//', !!superAnswer);
-
-            res.render('home', {
-                title: 'Тестовое задание',
-                data: superAnswer,
-            })
         }
 
-        // res.render('home', {
-        //     title: 'Тестовое задание',
-        //     data: 'dont work ',
-        // })
+
+
+        // } else {
+        //     console.log('>>>//', !!superAnswer);
+
+        //     res.render('home', {
+        //         title: 'Тестовое задание',
+        //         data: superAnswer,
+        //         inputValue : inputValue
+        //     })
+        // }
+        // if (superAnswer === true) {
+        //     console.log('>>>//', !!superAnswer);
+
+        //     res.render('home', {
+        //         title: 'Тестовое задание',
+        //         data: superAnswer,
+        //     })
+        // }
+
+
 
     } catch (error) {
         console.log(error);
@@ -93,6 +107,8 @@ app.get('/', async (req, res) => {
 app.get('/query/:query', async function (req, res) {
 
     const queryString = encodeURI(req.params.query);
+    // console.log(chalk.blue.bgGreen.bold(typeof queryString))
+    // console.log(chalk.blue.bgGreen.bold( queryString))
     const leadsFromSearch = await getleadsFromSearch(queryString);
 
     if (leadsFromSearch === null) {
@@ -116,11 +132,15 @@ app.get('/query/:query', async function (req, res) {
     const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts);
     const answer = leadsWithContactsEmailAndPhone;
 
-    superAnswer = answer;
-    inputValue = req.params.query;
+    // superAnswer = answer;
+    // inputValue = req.params.query;
 
     res.status(200).send({
-        'data': answer
+        'data': {
+            data: "data",
+            answer: answer
+        }
+
     });
 })
 
