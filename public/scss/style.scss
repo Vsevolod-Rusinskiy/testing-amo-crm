@@ -54,7 +54,7 @@ main {
       .content {
         flex-wrap: wrap;
         align-content: center;
-        height: 100%;
+        height: 700;
         .head {
           .hidden-plus-sign {
             visibility: hidden;
@@ -98,11 +98,16 @@ main {
           }
         }
         .row {
+          
           div {
             min-width: 20px;
-            &:first-child {
-              cursor: pointer;
-            }
+            // &:first-child {
+            //   cursor: pointer;
+            // }
+            .plus-sign{
+                cursor: pointer;
+
+          }
           }
           color: rgb(132, 132, 132);
 

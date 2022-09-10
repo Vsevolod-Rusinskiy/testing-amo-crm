@@ -60,19 +60,20 @@ app.get(['/', '/:query'], async (req, res) => {
 
 
         console.log(chalk.white.bgBlue.bold(req.params.query));
-        if (req.params.query === 'all-leads') {
+
+        if (req.params.query === 'all-leads-search') {
             res.status(200).send({
                 'data': {
                     data: "data",
-                    answer: answer
+                    answerAllLeadsSearch: answer
                 }
 
             });
-            
+
         } else {
             res.render('home', {
                 title: 'Тестовое задание',
-                data: answer,
+                answer: answer,
             })
         }
 

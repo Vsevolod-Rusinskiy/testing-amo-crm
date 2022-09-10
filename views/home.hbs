@@ -37,7 +37,8 @@
             </div>
 
 
-            {{#each data}}
+            {{!-- {{#if dataAllLeads}} --}}
+            {{#each answer}}
             <div class="row item">
               <div><span class="plus-sign">+</span></div>
               {{!-- ////////// --}}
@@ -82,11 +83,16 @@
               <div class="child">{{created_at}}</div>
               <div class="child">{{separatePriceWithSpace price}} ₽</div>
             </div>
-            
+
             <div class="row item contacts visible">
               {{#each _embedded.contacts}}
+
               <div class="child name-cell">
-                <i class="fa-regular fa-user"></i>{{name}}
+
+                <i class="fa-regular fa-user"></i>
+                <div>
+                  {{name}}
+                </div>
                 {{#if phone}}
                 <span class="separator"> | </span>
                 <span class="tag"><a href="tel:{{phone}}"><i class="fa-solid fa-phone"></i></a></span>
@@ -96,9 +102,11 @@
                 <span class="tag"><a href="mailto:{{email}}"><i class="fa-solid fa-envelope"></i></a></span>
                 {{/if}}
               </div>
+
               {{/each}}
             </div>
             {{/each}}
+            {{!-- {{/if}} --}}
           </div>
         </div>
       </div>
