@@ -64,8 +64,8 @@ app.get(['/', '/:query'], async (req, res) => {
         if (req.params.query === 'all-leads-search') {
             res.status(200).send({
                 'data': {
-                    data: "data",
-                    answerAllLeadsSearch: answer
+                    data: "dataAllLeadsFromSearch",
+                    answerAllLeadsFromSearch: answer
                 }
 
             });
@@ -76,27 +76,6 @@ app.get(['/', '/:query'], async (req, res) => {
                 answer: answer,
             })
         }
-
-
-
-        // } else {
-        //     console.log('>>>//', !!superAnswer);
-
-        //     res.render('home', {
-        //         title: 'Тестовое задание',
-        //         data: superAnswer,
-        //         inputValue : inputValue
-        //     })
-        // }
-        // if (superAnswer === true) {
-        //     console.log('>>>//', !!superAnswer);
-
-        //     res.render('home', {
-        //         title: 'Тестовое задание',
-        //         data: superAnswer,
-        //     })
-        // }
-
 
 
     } catch (error) {
@@ -137,11 +116,10 @@ app.get('/query/:query', async function (req, res) {
     // inputValue = req.params.query;
 
     res.status(200).send({
-        'data': {
-            data: "data",
-            answer: answer
+        data: {
+            data: "dataLeadsFromSearch",
+            answerLeadsFromSearch: answer
         }
-
     });
 })
 
