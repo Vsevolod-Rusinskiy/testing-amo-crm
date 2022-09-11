@@ -53,6 +53,17 @@ main .wrapper .table {
 }
 main .wrapper .table .no-data {
   text-align: center;
+  display: -ms-grid;
+  display: grid;
+  color: silver;
+  font-weight: 600;
+}
+main .wrapper .table .no-data span {
+  margin-bottom: 15px;
+}
+main .wrapper .table .no-data i {
+  color: rgb(223, 223, 223);
+  font-size: 50px;
 }
 main .wrapper .table .display {
   display: none;

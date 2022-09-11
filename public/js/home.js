@@ -1,21 +1,6 @@
 const content = document.querySelector('.content');
 const search = document.querySelector('#search');
 const noData = document.querySelector('.no-data');
-// const row = document.querySelectorAll('.row');
-
-
-
-// console.log(row);
-
-
-// removeDomElem(row);
-
-// function removeDomElem(elem) {
-//     row.forEach((elem) => {
-//         elem.remove();
-//     });
-// }
-
 
 content.addEventListener('click', function (event) {
     event.preventDefault();
@@ -24,8 +9,7 @@ content.addEventListener('click', function (event) {
         elem.innerHTML = (elem.innerHTML === '+') ? elem.innerHTML = '-' : elem.innerHTML = '+';
         event.target.closest('.row').nextElementSibling.classList.toggle('visible');
     }
-})
-
+});
 
 
 search.addEventListener('keyup', async function () {
@@ -38,31 +22,12 @@ search.addEventListener('keyup', async function () {
         response = await promise.json();
         const leads = response.data.answerAllLeadsFromSearch;
 
-        // removeDomElem(row);
-
-        // row.forEach((elem) => {
-        //     elem.remove();
-        // });
-
         noData.classList.add('display');
         content.classList.remove('display');
 
-
         const row = document.querySelectorAll('.row');
-
         removeDomElem(row);
-
-        // row.forEach((elem) => {
-        //     elem.remove();
-        // });
-
-        console.log('удалил!')
-
-        console.log('перед отрисовкой!')
-
         displayLeads(leads);
-
-        console.log('после  отрисовки!')
     }
 
 
@@ -71,24 +36,33 @@ search.addEventListener('keyup', async function () {
             method: 'GET',
         });
         response = await promise.json();
-        console.log(response.data)
-        console.log(response.data.answerLeadsFromSearch)
+        const leads = response.data.answerLeadsFromSearch;
 
-        // if ()
+        console.log('answerLeadsFromSearch')
 
+
+        if (response.data.data === "dataLeadsFromSearch") {
+
+            const row = document.querySelectorAll('.row');
+            removeDomElem(row);
+            displayLeads(leads);
+
+        }
+// карина
 
         if (response.data === 'nodata') {
             noData.classList.remove('display');
             content.classList.add('display');
 
-            // == dataAllLeadsFromSearch
         } else {
             noData.classList.add('display');
+            content.classList.remove('display');
+
         }
     }
-})
+});
 
-/// -----  FUNC --------------------
+/// -----  FUNCTIONS --------------------
 
 function separatePriceWithSpace(price) {
     num = '' + price;
@@ -96,9 +70,6 @@ function separatePriceWithSpace(price) {
 }
 
 function displayLeads(leads) {
-
-
-    // console.log(row)
 
     if (leads) {
 
@@ -111,7 +82,7 @@ function displayLeads(leads) {
             let plus = document.createElement('div');
             row.append(plus);
             let span = document.createElement('span');
-            span.innerHTML = '!'
+            span.innerHTML = '+'
             plus.append(span);
             span.classList.add("plus-sign");
 

@@ -44,8 +44,18 @@ main {
       font-size: 14px;
 
       .no-data {
-        // display: none;
         text-align: center;
+        display: grid;
+        color: silver;
+        font-weight: 600;
+        span {
+          margin-bottom: 15px;
+        }
+
+        i {
+          color: rgb(223, 223, 223);
+          font-size: 50px;
+        }
       }
 
       .display {
@@ -94,20 +104,18 @@ main {
           .name-cell {
             width: 400px;
             display: flex;
-            align-items: center
+            align-items: center;
           }
         }
         .row {
-          
           div {
             min-width: 20px;
             // &:first-child {
             //   cursor: pointer;
             // }
-            .plus-sign{
-                cursor: pointer;
-
-          }
+            .plus-sign {
+              cursor: pointer;
+            }
           }
           color: rgb(132, 132, 132);
 
@@ -137,8 +145,6 @@ main {
           }
         }
         .contacts {
-          // display: none;
-          // color: rebeccapurple;
           flex-direction: column;
           align-content: flex-start;
           margin: 0 0 5px 0px;

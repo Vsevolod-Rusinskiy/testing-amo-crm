@@ -39,8 +39,6 @@ app.engine("hbs", engine({
 
 app.use(express.static(path.resolve() + "/public"));
 
-let superAnswer = false;
-let inputValue = '';
 
 // -------------- ROUTS ------------------------------------------------------------------------------------------------------
 
@@ -58,16 +56,12 @@ app.get(['/', '/:query'], async (req, res) => {
         const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
         const answer = leadsWithContactsEmailAndPhone;
 
-
-        console.log(chalk.white.bgBlue.bold(req.params.query));
-
         if (req.params.query === 'all-leads-search') {
             res.status(200).send({
                 'data': {
                     data: "dataAllLeadsFromSearch",
                     answerAllLeadsFromSearch: answer
                 }
-
             });
 
         } else {
@@ -87,8 +81,6 @@ app.get(['/', '/:query'], async (req, res) => {
 app.get('/query/:query', async function (req, res) {
 
     const queryString = encodeURI(req.params.query);
-    // console.log(chalk.blue.bgGreen.bold(typeof queryString))
-    // console.log(chalk.blue.bgGreen.bold( queryString))
     const leadsFromSearch = await getleadsFromSearch(queryString);
 
     if (leadsFromSearch === null) {
@@ -98,12 +90,10 @@ app.get('/query/:query', async function (req, res) {
     }
 
     const idFromLeadsString = getIdFromLeadsString(leadsFromSearch);
-
     const leads = await getleadsFromSearchById(idFromLeadsString);
     const users = await getUsers();
     const contacts = await getContacts();
 
-    console.log(chalk.white.bgBlue.bold(leads))
 
 
     const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
@@ -111,9 +101,6 @@ app.get('/query/:query', async function (req, res) {
     const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
     const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts);
     const answer = leadsWithContactsEmailAndPhone;
-
-    // superAnswer = answer;
-    // inputValue = req.params.query;
 
     res.status(200).send({
         data: {
@@ -123,7 +110,7 @@ app.get('/query/:query', async function (req, res) {
     });
 })
 
-// -------------- FUNC ------------------------------------------------------------------------------------------------------
+// -------------- FUNCTIONS ------------------------------------------------------------------------------------------------------
 
 async function getLeadsWithContactsId() {
     let answer = await axios({
@@ -175,7 +162,6 @@ function putUsersNamesAndIdInObj(users) {
     }
     return usersNamesAndIdInObj;
 }
-
 
 function changeNameIdForNameText(leads, names) {
     for (const elem of leads) {
@@ -260,6 +246,19 @@ function changeStatusIdForStatusText(leads, statuses) {
     return leads
 }
 
+function getIdFromLeadsString(leads) {
+    if (leads === null) {
+        return null;
+    }
+
+    const idFromLeadsArray = [];
+
+    for (const lead of leads) {
+        idFromLeadsArray.push('&id[]=' + lead.id);
+    }
+    const idFromLeadsString = idFromLeadsArray.join('');
+    return idFromLeadsString;
+}
 
 // -------------- SEARCH FUNC -------------------------------------------------------------------------------------
 
@@ -285,25 +284,9 @@ async function getleadsFromSearch(queryString) {
     }
 }
 
-function getIdFromLeadsString(leads) {
-    if (leads === null) {
-        return null;
-    }
 
-    const idFromLeadsArray = [];
-
-    for (const lead of leads) {
-        console.log(lead.id)
-        idFromLeadsArray.push('&id[]=' + lead.id)
-
-    }
-    const idFromLeadsString = idFromLeadsArray.join('');
-    return idFromLeadsString;
-}
 
 async function getleadsFromSearchById(string) {
-    console.log(string)
-    console.log(typeof string)
     try {
         const response = await axios({
             method: 'get',
@@ -314,13 +297,11 @@ async function getleadsFromSearchById(string) {
             },
         });
 
-
-        console.log(chalk.blue.bgGreen.bold(response.data._embedded.leads));
         const leadsFromSearchById = await response.data._embedded.leads;
         return leadsFromSearchById;
 
     } catch (error) {
-        console.log('Something went wrong getting leadsFromSearchById ...', error);
+        console.log('Something went wrong', error);
     }
 }
 
