@@ -68,6 +68,63 @@ main .wrapper .table .no-data i {
 main .wrapper .table .display {
   display: none;
 }
+main .wrapper .table .loader-wrapper {
+  margin-bottom: 15px;
+}
+main .wrapper .table .loader-wrapper .loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: block;
+  margin: 15px auto;
+  position: relative;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-animation: rotation 1s linear infinite;
+          animation: rotation 1s linear infinite;
+}
+main .wrapper .table .loader-wrapper .loader::after,
+main .wrapper .table .loader-wrapper .loader::before {
+  content: "";
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: #337AB7;
+  width: 16px;
+  height: 16px;
+  -webkit-transform: translate(-50%, 50%);
+          transform: translate(-50%, 50%);
+  border-radius: 50%;
+}
+main .wrapper .table .loader-wrapper .loader::before {
+  left: auto;
+  right: 0;
+  background: #6ebeff;
+  -webkit-transform: translate(50%, 100%);
+          transform: translate(50%, 100%);
+}
+@-webkit-keyframes rotation {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+@keyframes rotation {
+  0% {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
 main .wrapper .table .content {
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;

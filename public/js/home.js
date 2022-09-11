@@ -1,6 +1,8 @@
 const content = document.querySelector('.content');
 const search = document.querySelector('#search');
 const noData = document.querySelector('.no-data');
+const loader = document.querySelector('.loader-wrapper');
+
 
 content.addEventListener('click', function (event) {
     event.preventDefault();
@@ -15,51 +17,72 @@ content.addEventListener('click', function (event) {
 search.addEventListener('keyup', async function () {
     let queyrString = this.value;
 
-    if (this.value === '') {
-        const promise = await fetch(`/all-leads-search`, {
-            method: 'GET',
-        })
-        response = await promise.json();
-        const leads = response.data.answerAllLeadsFromSearch;
+    try {
 
-        noData.classList.add('display');
-        content.classList.remove('display');
+        if (this.value === '') {
 
-        const row = document.querySelectorAll('.row');
-        removeDomElem(row);
-        displayLeads(leads);
-    }
-
-
-    if (queyrString.length >= 3) {
-        const promise = await fetch(`/query/${queyrString}`, {
-            method: 'GET',
-        });
-        response = await promise.json();
-        const leads = response.data.answerLeadsFromSearch;
-
-        console.log('answerLeadsFromSearch')
-
-
-        if (response.data.data === "dataLeadsFromSearch") {
-
-            const row = document.querySelectorAll('.row');
+            let row = document.querySelectorAll('.row');
             removeDomElem(row);
-            displayLeads(leads);
+            loader.classList.remove('display');
 
-        }
-// карина
+            const promise = await fetch(`/all-leads-search`, {
+                method: 'GET',
+            })
+            response = await promise.json();
+            const leads = response.data.answerAllLeadsFromSearch;
 
-        if (response.data === 'nodata') {
-            noData.classList.remove('display');
-            content.classList.add('display');
-
-        } else {
+            row = document.querySelectorAll('.row');
+            removeDomElem(row);
             noData.classList.add('display');
+            loader.classList.add('display');
             content.classList.remove('display');
-
+            displayLeads(leads);
         }
+
+    } catch (error) {
+        console.log('Something went wrong', error);
+    } finally {
+        loader.classList.add('display');
     }
+
+    try {
+
+        if (queyrString.length >= 3) {
+
+            let row = document.querySelectorAll('.row');
+            removeDomElem(row);
+            loader.classList.remove('display');
+
+            const promise = await fetch(`/query/${queyrString}`, {
+                method: 'GET',
+            });
+            response = await promise.json();
+            const leads = response.data.answerLeadsFromSearch;
+
+            if (response.data.data === "dataLeadsFromSearch") {
+
+                let row = document.querySelectorAll('.row');
+                removeDomElem(row);
+                loader.classList.add('display');
+                displayLeads(leads);
+
+            }
+
+            if (response.data === 'nodata') {
+                noData.classList.remove('display');
+                content.classList.add('display');
+
+            } else {
+                noData.classList.add('display');
+                content.classList.remove('display');
+            }
+        }
+    } catch (error) {
+        console.log('Something went wrong', error);
+    } finally {
+        loader.classList.add('display');
+    }
+
 });
 
 /// -----  FUNCTIONS --------------------
