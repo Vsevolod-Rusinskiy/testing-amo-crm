@@ -9,6 +9,7 @@ const chalk = require('chalk');
 const {
     type
 } = require("express/lib/response");
+const res = require("express/lib/response");
 
 require('dotenv').config();
 
@@ -44,8 +45,18 @@ app.use(express.static(path.resolve() + "/public"));
 
 
 app.get(['/', '/:query'], async (req, res) => {
+    // console.log('>>>>>', res);
+    // console.log('>>>>>', req);
+
+    // console.log(chalk.blue.bgGreen.bold(req.data))
+
+
 
     try {
+
+        // console.log(chalk.blue.bgGreen.bold(await getLeadsWithContactsId(checkToken())))
+        // checkToken()
+        // console.log(chalk.blue.bgGreen.bold(checkToken()))
         const leads = await getLeadsWithContactsId();
         const users = await getUsers();
         const contacts = await getContacts();
@@ -111,8 +122,40 @@ app.get('/query/:query', async function (req, res) {
 })
 
 // -------------- FUNCTIONS ------------------------------------------------------------------------------------------------------
+async function checkToken() {
+
+    let isTokenExpired = false;
+
+    axios.interceptors.response.use((response) => {
+        // return response;
+    }, (error) => {
+        console.log('>>>', error.response.status)
+
+        if (error.response.status === 401) {
+            console.log('Change token');
+             isTokenExpired = true;
+            return isTokenExpired;
+        }
+        return Promise.reject(error.message);
+    });
+
+    // let answer = await axios({
+    let answer = await axios({
+        method: 'get',
+        url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': "application/json"
+        },
+    })
+
+}
+
+// -------------- FUNCTIONS ------------------------------------------------------------------------------------------------------
 
 async function getLeadsWithContactsId() {
+
+
     let answer = await axios({
         method: 'get',
         url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
@@ -124,32 +167,43 @@ async function getLeadsWithContactsId() {
 
     const leads = await answer.data._embedded.leads;
     return leads;
+
 }
 
 async function getUsers() {
-    const answer = await axios({
-        method: 'get',
-        url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': "application/json"
-        },
-    });
-    const users = await answer.data._embedded.users;
-    return users;
+
+    try {
+        const answer = await axios({
+            method: 'get',
+            url: 'https://alekseirizchkov.amocrm.ru/api/v4/users',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
+        const users = await answer.data._embedded.users;
+        return users;
+    } catch (error) {
+        console.log('Something went wrong...', error)
+    }
 }
 
 async function getContacts() {
-    const answer = await axios({
-        method: 'get',
-        url: 'https://alekseirizchkov.amocrm.ru/api/v4/contacts',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': "application/json"
-        },
-    });
-    const contacts = await answer.data._embedded.contacts;
-    return contacts;
+    try {
+        const answer = await axios({
+            method: 'get',
+            url: 'https://alekseirizchkov.amocrm.ru/api/v4/contacts',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
+        const contacts = await answer.data._embedded.contacts;
+        return contacts;
+    } catch (error) {
+        console.log('Something went wrong...', error)
+    }
+
 }
 
 function putUsersNamesAndIdInObj(users) {
@@ -309,6 +363,6 @@ try {
     app.listen(PORT, (req, res) => {
         console.log(`Server is working on port ${PORT}`);
     });
-} catch (err) {
-    console.log(err)
+} catch (error) {
+    console.log('>>>>>>>>', error);
 }
