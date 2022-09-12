@@ -7,17 +7,26 @@ const {
 const axios = require('axios');
 const chalk = require('chalk');
 const fetch = require('node-fetch')
-const fsPromise = require('fs/promises')
+const fsPromise = require('fs/promises');
+
+const fs = require('fs')
+const envfile = require('envfile');
+
 require('dotenv').config();
+const tokens = require('./tokens.json');
+
 
 const app = express();
 
 const PORT = process.env.SERVER_PORT || 8095;
-const tokenAccess = process.env.ACCESS_TOKEN;
-const tokenRefresh = process.env.REFRESH_TOKEN;
 
-// console.log(tokenAccess)
-// console.log(tokenRefresh)
+// const tokenAccess = process.env.ACCESS_TOKEN;
+// const tokenRefresh = process.env.REFRESH_TOKEN;
+
+const tokenAccess = tokens.ACCESS_TOKEN;
+const tokenRefresh = tokens.REFRESH_TOKEN;
+
+
 
 
 app.use(cors({
@@ -42,10 +51,46 @@ app.engine("hbs", engine({
 app.use(express.static(path.resolve() + "/public"));
 
 
+// const sourcePath = 'response.txt'
+// console.log(envfile.parse(sourcePath))
+// let parsedFile = envfile.parse(sourcePath);
+// parsedFile.ACCESS_TOKEN = 'ACCESS_TOKEN';
+// parsedFile.REFRESH_TOKEN = 'REFRESH_TOKEN';
+// fs.writeFileSync('./response.txt', envfile.stringify(parsedFile))
+// console.log(envfile.stringify(parsedFile))
+
+
+
 // -------------- CHECK TOKEN -----------------------
 
-async function fetchTocken() {
 
+
+checkToken();
+
+async function checkToken() {
+    try {
+        let answer = await axios({
+            method: 'get',
+            url: 'https://demolitiondirectyandexru.amocrm.ru/api/v4/leads?with=contacts',
+            headers: {
+                'Authorization': `Bearer ${tokenAccess}`,
+                'Content-Type': "application/json"
+            },
+        })
+
+        const leads = await answer.data._embedded.leads;
+    } catch (error) {
+        console.log('+++', error.response.status);
+        if (error.response.status === 401) {
+            console.log(chalk.white.bgBlue.bold('Starting change token...'));
+            await refreshToken();
+            console.log(chalk.white.bgBlue.bold('Done'));
+        }
+    }
+}
+
+
+async function refreshToken() {
 
     const raw = JSON.stringify({
         "client_id": "69381124-7c4d-49da-8792-df8f333bfb60",
@@ -64,22 +109,58 @@ async function fetchTocken() {
         redirect: 'follow'
     };
 
+    // const newTokens = ''
+
     try {
-        const response = await fetch("https://demolitiondirectyandexru.amocrm.ru/oauth2/access_token", requestOptions)
+        const response = await fetch("https://demolitiondirectyandexru.amocrm.ru/oauth2/access_token", requestOptions);
         data = await response.json();
         console.log('data >>>', data)
+        console.log('data >>>', data.access_token)
+        console.log('data >>>', data.refresh_token)
+
+        const sourcePath = '.env'
+        console.log(envfile.parse(sourcePath))
+        let parsedFile = envfile.parse(sourcePath);
+        parsedFile.ACCESS_TOKEN = data.access_token;
+        fs.writeFileSync('./.env', envfile.stringify(parsedFile))
+        parsedFile.REFRESH_TOKEN = data.refresh_token;
+        fs.writeFileSync('./.env', envfile.stringify(parsedFile))
+        console.log(envfile.stringify(parsedFile))
+
+        let tokens =  {
+            "ACCESS_TOKEN" : data.access_token,
+            "REFRESH_TOKEN" : data.refresh_token,
+        } 
+
+        try {
+            await fsPromise.writeFile(path.resolve(__dirname, 'tokens.json'), JSON.stringify(tokens) )
+            console.log('Файл сохранен');
+
+        } catch (error) {
+            console.log(error);
+        }
+
+       
+
     } catch (error) {
-        console.log('Can not get tocken', error)
+        console.log('Can not get tocken', error);
     }
 
+    // try {
 
 
+
+    //     // await fsPromise.writeFile(path.resolve(__dirname, response.txt), newTokens)
+    //     // console.log(successMessage('Файл сохранен'));
+
+    // } catch (error) {
+    //     console.log(error.message);
+    // }
 }
-// fetchTocken();
-
 
 
 app.get(['/', '/:query'], async (req, res) => {
+
     try {
         const leads = await getLeadsWithContactsId();
         const users = await getUsers();
@@ -88,7 +169,7 @@ app.get(['/', '/:query'], async (req, res) => {
         const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
         const leadsWithStatuses = changeDate(leadsWithUsersNames);
         const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
-    //    console.log(chalk.blue.bgGreen.bold(changeStatusIdForStatusText(leadsWithStatuses, statuses)))
+        //    console.log(chalk.blue.bgGreen.bold(changeStatusIdForStatusText(leadsWithStatuses, statuses)))
         const leadsWithContactsEmailAndPhone = addContactsEmailAndPhone(leadsWithTextStatuses, contacts)
         const answer = leadsWithContactsEmailAndPhone;
 
