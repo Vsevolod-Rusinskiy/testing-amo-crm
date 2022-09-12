@@ -6,17 +6,14 @@ const {
 } = require('express-handlebars')
 const axios = require('axios');
 const chalk = require('chalk');
-const {
-    type
-} = require("express/lib/response");
-const res = require("express/lib/response");
-
+const fetch = require('node-fetch')
+const fsPromise = require('fs/promises')
 require('dotenv').config();
 
 const app = express();
 
 const PORT = process.env.SERVER_PORT || 8095;
-const token = process.env.TOKEN;
+const token = process.env.ACCESS_TOKEN;
 
 
 app.use(cors({
@@ -41,22 +38,68 @@ app.engine("hbs", engine({
 app.use(express.static(path.resolve() + "/public"));
 
 
-// -------------- ROUTS ------------------------------------------------------------------------------------------------------
+// -------------- CHECK TOKEN -----------------------
+
+async function fetchTocken() {
+
+    try {
+        let response = await fetch('https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts', {
+            method: 'get',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': "application/json"
+            },
+        });
+
+        data = await response;
+        console.log('>>>', data.status);
+        console.log(chalk.white.bgBlue.bold('>>>', data.status));
+
+        if (data.status === 401) {
+
+            const body = {
+                "client_id": "5b696abc-0a27-4983-989e-c3abc6ee0e24",
+                "client_secret": "VJOnPjjtT4yZdy3Z5v3XLXGzcp6ZGMlqGIxpscTVZDS9RIdEnQhfw0vgE5d78BIg",
+                "grant_type": "refresh_token",
+                "refresh_token": process.env.REFRESH_TOKEN,
+                "redirect_uri": "https://newartspace.ru/"
+            }
+
+            try {
+                let response = fetch('https://alekseirizchkov.amocrm.ru/oauth2/access_token', {
+                    method: 'post',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': "application/json",
+                        "token_type": "Bearer",
+
+                    },
+                    body: JSON.stringify(body),
+                });
+
+                data = await response;
+                console.log('>>>', data);
+                console.log(chalk.white.bgBlue.bold('>>>', data.status));
+
+                await fsPromise.writeFile(path.resolve(__dirname, `response.txt`), data.toString() )
+                await fsPromise.writeFile(path.resolve(__dirname, `response.txt`), JSON.stringify(data.status) )
+                console.log('Файл сохранен');
+
+            } catch (error) {
+                console.log(chalk.blue.bgGreen.bold(error))
+            }
+        }
+
+    } catch (error) {
+        console.log(chalk.blue.bgGreen.bold(error.status))
+    }
+}
+// fetchTocken();
+
 
 
 app.get(['/', '/:query'], async (req, res) => {
-    // console.log('>>>>>', res);
-    // console.log('>>>>>', req);
-
-    // console.log(chalk.blue.bgGreen.bold(req.data))
-
-
-
     try {
-
-        // console.log(chalk.blue.bgGreen.bold(await getLeadsWithContactsId(checkToken())))
-        // checkToken()
-        // console.log(chalk.blue.bgGreen.bold(checkToken()))
         const leads = await getLeadsWithContactsId();
         const users = await getUsers();
         const contacts = await getContacts();
@@ -81,14 +124,11 @@ app.get(['/', '/:query'], async (req, res) => {
                 answer: answer,
             })
         }
-
-
     } catch (error) {
         console.log(error);
     }
 });
 
-//111
 app.get('/query/:query', async function (req, res) {
 
     const queryString = encodeURI(req.params.query);
@@ -106,7 +146,6 @@ app.get('/query/:query', async function (req, res) {
     const contacts = await getContacts();
 
 
-
     const leadsWithUsersNames = changeNameIdForNameText(leads, putUsersNamesAndIdInObj(users));
     const leadsWithStatuses = changeDate(leadsWithUsersNames);
     const leadsWithTextStatuses = changeStatusIdForStatusText(leadsWithStatuses, statuses);
@@ -121,37 +160,7 @@ app.get('/query/:query', async function (req, res) {
     });
 })
 
-// -------------- FUNCTIONS ------------------------------------------------------------------------------------------------------
-async function checkToken() {
 
-    let isTokenExpired = false;
-
-    axios.interceptors.response.use((response) => {
-        // return response;
-    }, (error) => {
-        console.log('>>>', error.response.status)
-
-        if (error.response.status === 401) {
-            console.log('Change token');
-             isTokenExpired = true;
-            return isTokenExpired;
-        }
-        return Promise.reject(error.message);
-    });
-
-    // let answer = await axios({
-    let answer = await axios({
-        method: 'get',
-        url: 'https://alekseirizchkov.amocrm.ru/api/v4/leads?with=contacts',
-        headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': "application/json"
-        },
-    })
-
-}
-
-// -------------- FUNCTIONS ------------------------------------------------------------------------------------------------------
 
 async function getLeadsWithContactsId() {
 
