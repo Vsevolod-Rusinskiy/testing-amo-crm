@@ -13,7 +13,11 @@ require('dotenv').config();
 const app = express();
 
 const PORT = process.env.SERVER_PORT || 8095;
-const token = process.env.ACCESS_TOKEN;
+const tokenAccess = process.env.ACCESS_TOKEN;
+const tokenRefresh = process.env.REFRESH_TOKEN;
+
+// console.log(tokenAccess)
+// console.log(tokenRefresh)
 
 
 app.use(cors({
@@ -41,37 +45,65 @@ app.use(express.static(path.resolve() + "/public"));
 // -------------- CHECK TOKEN -----------------------
 
 async function fetchTocken() {
+//     var myHeaders = new Headers();
+// myHeaders.append("Content-Type", "application/json");
+// myHeaders.append("Cookie", "session_id=l6p8opamu37psq3p5eh01j5l5a; user_lang=ru");
+
+var raw = JSON.stringify({
+  "client_id": "69381124-7c4d-49da-8792-df8f333bfb60",
+  "client_secret": "AIpLGrvT1TFPILnuJbxrcBtTV3fiN4Tr2UZBf3U1TeotTwy9maAgwZL6WZRivpzb",
+  "grant_type": "refresh_token",
+  "refresh_token": tokenRefresh,
+  "redirect_uri": "https://newartspace.ru/"
+});
+
+var requestOptions = {
+  method: 'POST',
+  headers: {
+            'Content-Type': "application/json",
+        },
+  body: raw,
+  redirect: 'follow'
+};
+
+fetch("https://demolitiondirectyandexru.amocrm.ru/oauth2/access_token", requestOptions)
+  .then(response => response.text())
+  .then(result => console.log(result))
+  .catch(error => console.log('error', error));
     // var myHeaders = new Headers();
     // myHeaders.append("Content-Type", "application/json");
     // myHeaders.append("Cookie", "session_id=l6p8opamu37psq3p5eh01j5l5a; user_lang=ru");
 
-    var raw = JSON.stringify({
-        "client_id": "69381124-7c4d-49da-8792-df8f333bfb60",
-        "client_secret": "AIpLGrvT1TFPILnuJbxrcBtTV3fiN4Tr2UZBf3U1TeotTwy9maAgwZL6WZRivpzb",
-        "grant_type": "refresh_token",
-        "refresh_token": "def50200afdd0a9cb6c89feb85d4380b9046de5bc2dc5a614db8a8def4aae354fbf72297998211291012558a2dabeee3b212662b4bf7aecd3a837d08ed8050faa05f2a9d286531daccdc2f48f85ea0b6699439199d57218894b06d0ef027b088ec97cc701a69a1028d05a7f94f7afc148d634f10074ab53d87a0898c9885223a77f1ce66c636eae6bb771f116a50e324456fabdc47dfb73d7ad2a674ebebc952fa1ec02ab2009f870b74b3f077060a9b78005d84ebc97d0db43b714d912219bb76b5a8cf3ff6937e2fffdfc1dd025c870a7dd8d8a262d72f5d08dcebaa79f2ffa8eb27d776ad91eaaa9a03481f92cbe88c2846523e92aa945f469f968cae144922c9f6fcb22b489fd2afd434f2402556430ca963b4bb917ac31636c27b8abb28e492d28cf743f5dc4893ce5db5a1e6378a87f545f95ae993a5370054100f59cffff769d9a21da66674374310612b0da2a7a8c765e2e33bcf295e80fec3ced40f9e44770e082a6f9ba01c18e1d355bda4bb951338aac2775418a54c2d56fca239554b0e988d1cd2a3334815b4981bf81e04a9a915277fe8a1f68cd41ff54b1677af0ca1ad9286477c593c010803bb10eb404fd87465476bf4f9b0c8401f3bfea5012158a7fbb8d548d4ae108a664faa4509db4397a9f62a965a59d62d588b15f511",
-        "redirect_uri": "https://newartspace.ru/"
-    });
+    // const raw = JSON.stringify({
+    //     "client_id": "69381124-7c4d-49da-8792-df8f333bfb60",
+    //     "client_secret": "AIpLGrvT1TFPILnuJbxrcBtTV3fiN4Tr2UZBf3U1TeotTwy9maAgwZL6WZRivpzb",
+    //     "grant_type": "refresh_token",
+    //     "refresh_token": `${tokenRefresh}`,
+    //     "redirect_uri": "https://newartspace.ru/"
+    // });
 
-    var requestOptions = {
-        method: 'POST',
-        headers: {
-            'Content-Type': "application/json",
-        },
-        body: raw,
-        redirect: 'follow'
-    };
+    // const requestOptions = {
+    //     method: 'POST',
+    //     headers: {
+    //         'Content-Type': "application/json",
+    //     },
+    //     body: raw,
+    //     redirect: 'follow'
+    // };
 
-    fetch("https://demolitiondirectyandexru.amocrm.ru/oauth2/access_token", requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
+    // fetch("https://demolitiondirectyandexru.amocrm.ru/oauth2/access_tokenAccess", requestOptions)
+    //     .then(response => response.text())
+    //     .then(result => console.log(result))
+    //     .catch(error => console.log('error', error));
+
+    }
+    fetchTocken();
 
     // try {
     //     let response = await fetch('https://demolitiondirectyandexru.amocrm.ru/api/v4/leads?with=contacts', {
     //         method: 'get',
     //         headers: {
-    //             'Authorization': `Bearer ${token}`,
+    //             'Authorization': `Bearer ${tokenAccess}`,
     //             'Content-Type': "application/json"
     //         },
     //     });
@@ -86,17 +118,17 @@ async function fetchTocken() {
     //             "client_id": "5b696abc-0a27-4983-989e-c3abc6ee0e24",
     //             "client_secret": "VJOnPjjtT4yZdy3Z5v3XLXGzcp6ZGMlqGIxpscTVZDS9RIdEnQhfw0vgE5d78BIg",
     //             "grant_type": "refresh_token",
-    //             "refresh_token": process.env.REFRESH_TOKEN,
+    //             "refresh_token": tokenRefresh,
     //             "redirect_uri": "https://newartspace.ru/"
     //         }
 
     //         try {
-    //             let response = fetch('https://demolitiondirectyandexru.amocrm.ru/oauth2/access_token', {
+    //             let response = fetch('https://demolitiondirectyandexru.amocrm.ru/oauth2/access_tokenAccess', {
     //                 method: 'post',
     //                 headers: {
-    //                     'Authorization': `Bearer ${token}`,
+    //                     'Authorization': `Bearer ${tokenAccess}`,
     //                     'Content-Type': "application/json",
-    //                     "token_type": "Bearer",
+    //                     "tokenAccess_type": "Bearer",
 
     //                 },
     //                 body: JSON.stringify(body),
@@ -118,8 +150,7 @@ async function fetchTocken() {
     // } catch (error) {
     //     console.log(chalk.blue.bgGreen.bold(error.status))
     // }
-}
-fetchTocken();
+
 
 
 
@@ -194,7 +225,7 @@ fetchTocken();
 //         method: 'get',
 //         url: 'https://demolitiondirectyandexru.amocrm.ru/api/v4/leads?with=contacts',
 //         headers: {
-//             'Authorization': `Bearer ${token}`,
+//             'Authorization': `Bearer ${tokenAccess}`,
 //             'Content-Type': "application/json"
 //         },
 //     })
@@ -211,7 +242,7 @@ fetchTocken();
 //             method: 'get',
 //             url: 'https://demolitiondirectyandexru.amocrm.ru/api/v4/users',
 //             headers: {
-//                 'Authorization': `Bearer ${token}`,
+//                 'Authorization': `Bearer ${tokenAccess}`,
 //                 'Content-Type': "application/json"
 //             },
 //         });
@@ -228,7 +259,7 @@ fetchTocken();
 //             method: 'get',
 //             url: 'https://demolitiondirectyandexru.amocrm.ru/api/v4/contacts',
 //             headers: {
-//                 'Authorization': `Bearer ${token}`,
+//                 'Authorization': `Bearer ${tokenAccess}`,
 //                 'Content-Type': "application/json"
 //             },
 //         });
@@ -357,7 +388,7 @@ fetchTocken();
 //             method: 'get',
 //             url: `https://demolitiondirectyandexru.amocrm.ru/api/v4/leads?query=${queryString}`,
 //             headers: {
-//                 'Authorization': `Bearer ${token}`,
+//                 'Authorization': `Bearer ${tokenAccess}`,
 //                 'Content-Type': "application/json"
 //             },
 //         });
@@ -380,7 +411,7 @@ fetchTocken();
 //             method: 'get',
 //             url: `https://demolitiondirectyandexru.amocrm.ru/api/v4/leads?with=contacts${string}`,
 //             headers: {
-//                 'Authorization': `Bearer ${token}`,
+//                 'Authorization': `Bearer ${tokenAccess}`,
 //                 'Content-Type': "application/json"
 //             },
 //         });
